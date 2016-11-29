@@ -174,7 +174,7 @@
 					 e.printStackTrace ();
 					 continue;
 				 }
-			 }
+			   }
 		 }
 	}
 	```	
@@ -262,37 +262,39 @@
 			 try {
 				 File file = new File(HttpServer.WEB_ROOT, request.getUri());
 				 if (file.exists()) {
-						 fis = new FileInputStream(file);
-						 int ch = fis.read(bytes, 0, BUFFER_SIZE);
-						 while (ch!=-1) {
-							 output.write(bytes, 0, ch);
-							 ch = fis.read(bytes, 0, BUFFER_SIZE);
-						 }
+					 fis = new FileInputStream(file);
+					 int ch = fis.read(bytes, 0, BUFFER_SIZE);
+					 while (ch!=-1) {
+						 output.write(bytes, 0, ch);
+						 ch = fis.read(bytes, 0, BUFFER_SIZE);
+					 }
 			  	 }
 				 else {
-						 // file not found
-						 String errorMessage = "HTTP/1.1 404 File Not Found\r\n" +
-						 "Content-Type: text/html\r\n" +
-						 "Content-Length: 23\r\n" +
-						 "\r\n" +
-						 "<h1>File Not Found</h1>";
-						 output.write(errorMessage.getBytes());
+					 // file not found
+					 String errorMessage = "HTTP/1.1 404 File Not Found\r\n" +
+					 "Content-Type: text/html\r\n" +
+					 "Content-Length: 23\r\n" +
+					 "\r\n" +
+					 "<h1>File Not Found</h1>";
+					 output.write(errorMessage.getBytes());
 				 }
-		 }
-		 catch (Exception e) {
-				 // thrown if cannot instantiate a File object
-				 System.out.println(e.toString() );
 			 }
-		 finally {
-				 if (fis!=null)
-				 fis.close();
-			}
-		 }
+			 catch (Exception e) {
+					 // thrown if cannot instantiate a File object
+					 System.out.println(e.toString() );
+				 }
+			 finally {
+					 if (fis!=null)
+					 fis.close();
+				}
+			 }
 	}
 	```
 
 7.  Summary
 
+
+	HttpServer处理流程如下：
 	- HttpServer接收请求
 	- 根据请求构造Request对象，解析到uri
 	- 根据请求和Request对象构造Response对象，根据Request对象的uri响应客户端请求资源
