@@ -1,3 +1,4 @@
-# mynote
-record everything that I concern
-Just Test
+# Mynote #
+
+## Record everything that I concern ##
+
