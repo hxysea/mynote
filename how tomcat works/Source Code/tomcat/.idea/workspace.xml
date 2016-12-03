@@ -240,8 +240,8 @@
       <file leaf-file-name="Socket.java" pinned="false" current-in-tab="true">
         <entry file="jar://C:/JDK8/src.zip!/java/net/Socket.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.33333334">
-              <caret line="940" column="24" selection-start-line="940" selection-start-column="24" selection-end-line="940" selection-end-column="24" />
+            <state vertical-scroll-proportion="0.37606838">
+              <caret line="942" column="58" selection-start-line="942" selection-start-column="58" selection-end-line="942" selection-end-column="58" />
               <folding />
             </state>
           </provider>
@@ -831,7 +831,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="D:/SourceCode/jetty.project-jetty-9.3.x" />
     <property name="settings.editor.selected.configurable" value="File.Encoding" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="aspect.path.notification.shown" value="true" />
@@ -1154,16 +1154,16 @@
       <workItem from="1480417766503" duration="3089000" />
       <workItem from="1480490520290" duration="593000" />
       <workItem from="1480501011756" duration="1036000" />
-      <workItem from="1480672691180" duration="2716000" />
+      <workItem from="1480672691180" duration="3695000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="14021000" />
+    <option name="totallyTimeSpent" value="15000000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1912" y="-8" width="1936" height="1096" extended-state="7" />
-    <editor active="false" />
+    <frame x="1912" y="-8" width="1936" height="1096" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1178,7 +1178,7 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19189766" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2629032" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -1625,8 +1625,8 @@
     </entry>
     <entry file="jar://C:/JDK8/src.zip!/java/net/Socket.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334">
-          <caret line="940" column="24" selection-start-line="940" selection-start-column="24" selection-end-line="940" selection-end-column="24" />
+        <state vertical-scroll-proportion="0.37606838">
+          <caret line="942" column="58" selection-start-line="942" selection-start-column="58" selection-end-line="942" selection-end-column="58" />
           <folding />
         </state>
       </provider>
