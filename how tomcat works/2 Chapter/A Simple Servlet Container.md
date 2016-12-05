@@ -17,4 +17,14 @@
 3. **Why** need Servlet Container？
 	- 利用反射，同一入口处理不同请求 
 	- 利用Servlet作为父接口，使用了多态的特性
+
+4. **Application1**
+	- HttpServer
+	- Request
+	- Response
+	- StaticResouceProcessor
+	- ServletProcessor
+	- Constants
+
+
  

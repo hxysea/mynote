@@ -46,7 +46,6 @@ public class HttpServer {
 					shutDown = SHUTDOWN_COMMAND.equals(req.getUri());
 				} catch (IOException e) {
 					e.printStackTrace();
-					continue;
 				}
 
 			}
