@@ -1,3 +1,8 @@
+----------
+12/24/2016 7:19:25 PM 
+
+----------
+
 # Connector #
 
 1. **catalina**(tomcat中一个**处理servlet**模块)两个重要部分：
@@ -21,4 +26,20 @@
 		- ServletProcessor
 		- StaticResourceProcessor 
 
+4. **Implement it**
+	- Starting the application
+		- bootstrap
+	- The Connector
+	- Creating an HttpRequest Object
+	- Creating an HttpResponse Object
+	- Static resource processor and servlet processor
+	- Running the Application
+5. Connector Code
+	- Waiting for http requesta
+	- Create an HttpProcessor instance for each http request
+	- Call the process method of HttpProcessor
+
+```java
+
+```
 
