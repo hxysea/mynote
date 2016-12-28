@@ -12,7 +12,7 @@ public class DynamicArrayQueue {
     private int rear;
 
     private static int CAPACITY = 16;
-    private static final int MIN_CAPACITY = 1<< 15 ;
+    private static final int MIN_CAPACITY = 1 << 15;
 
     public DynamicArrayQueue() {
         queueRep = new int[CAPACITY];
