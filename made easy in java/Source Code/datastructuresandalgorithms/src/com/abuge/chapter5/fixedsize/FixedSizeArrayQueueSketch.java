@@ -1,7 +1,9 @@
-package com.abuge.chapter5;
+package com.abuge.chapter5.fixedsize;
 
 /**
  * Created by AbuGe on 2016/12/20.
+ * 初稿
+ * 需重构
  */
 public class FixedSizeArrayQueueSketch {
     private int[] content = new int[1024];
