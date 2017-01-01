@@ -50,7 +50,7 @@
 	- 定义获取队列头部元素的方法
 	- 定义获取队列大小的方法
 	- 定义队列是否为空的方法 
-9. **Code Demo**
+9. 基于固定长度数组实现队列**Code Demo**
 	
 	A. FixedSizeArrayQueue
 	```java
@@ -132,6 +132,219 @@
 	        return result.toString();
 	    }
 	
+	}
+	
+	```
+10. 基于动态数组实现队列
+	- 入队方法
+	- 出对方法
+	- 获取队列长度
+	- 队列是否为空
+	- 队列是否满
+	- 数组扩容
+	- 数组缩减容量为一半 
+	```java
+	package com.abuge.chapter5.dynamicsize;
+	
+	import java.util.Arrays;
+	
+	/**
+	 * Created by AbuGe on 2016/12/27.
+	 */
+	public class DynamicArrayQueue {
+	    private int[] queueRep;
+	    private int size;
+	    private int head;
+	    private int rear;
+	
+	    private static int CAPACITY = 16;
+	    private static final int MIN_CAPACITY = 1 << 15;
+	
+	    public DynamicArrayQueue() {
+	        queueRep = new int[CAPACITY];
+	        size = 0;
+	        head = 0;
+	        rear = 0;
+	    }
+	
+	    public DynamicArrayQueue(int capacity) {
+	        queueRep = new int[capacity];
+	        size = 0;
+	        head = 0;
+	        rear = 0;
+	        CAPACITY = capacity;
+	    }
+	
+	    public int getSize() {
+	        return size;
+	    }
+	
+	    public boolean isFull() {
+	        return size == CAPACITY;
+	    }
+	
+	    public boolean isEmpty() {
+	        return 0 == size;
+	    }
+	
+	    public void enQueue(int data) {
+	
+	        if (isFull()) {
+	            expand();
+	        }
+	        queueRep[rear] = data;
+	        rear++;
+	        size++;
+	    }
+	
+	    public int deQueue() {
+	        if (isFull()) {
+	            throw new IllegalStateException("queue underflow exception: queue is empty.");
+	        }
+	        int data = queueRep[head];
+	        queueRep[head] = Integer.MIN_VALUE;
+	        head++;
+	        size--;//元素个数要减一
+	        return data;
+	    }
+	
+	    private void expand() {
+	
+	        int[] newQueue = new int[CAPACITY << 1];
+	
+	        System.arraycopy(queueRep, head, newQueue, 0, size);
+	        head = 0;
+	        rear = size;
+	        queueRep = newQueue;
+	        CAPACITY = 2 * CAPACITY;
+	    }
+	
+	    public void shrink() {
+	        if (CAPACITY <= MIN_CAPACITY || size << 2 >= CAPACITY) {
+	            return;
+	        }
+	
+	        int[] newQueue = new int[CAPACITY / 2];
+	        System.arraycopy(queueRep, 0, newQueue, 0, size);
+	        queueRep = newQueue;
+	    }
+	
+	    @Override
+	    public String toString() {
+	        return "DynamicArrayQueue{" +
+	                "queueRep=" + Arrays.toString(queueRep) +
+	                ", size=" + size +
+	                ", head=" + head +
+	                ", rear=" + rear +
+	                '}';
+	    }
+	}
+	
+	```
+11. 基于链表实现队列
+	- 入队
+	- 出队
+	- 获取队首元素
+	- 队列长度
+	- 队列是否为空
+	- 队列是都已满
+	- toString
+
+	```java
+	package com.abuge.chapter5.linkedlist;
+	
+	/**
+	 * Created by AbuGe on 2017/1/1.
+	 */
+	public class LinkedListQueue {
+	    private LinkedNode head;
+	    private LinkedNode rear;
+	    private int length;
+	
+	    public LinkedListQueue() {
+	        length = 0;
+	        head = null;
+	        rear = null;
+	    }
+	
+	    public void enQueue(int data) {
+	        LinkedNode linkedNode = new LinkedNode(data);
+	        if (isEmpty()) {
+	            head = linkedNode;
+	        } else {
+	            rear.setNext(linkedNode);
+	        }
+	        rear = linkedNode;
+	        length++;
+	    }
+	
+	    public int deQueue() {
+	        if (isEmpty()) {
+	            throw new IllegalStateException("underflow exception:queue is empty.");
+	        }
+	        int data = head.getData();
+	        LinkedNode nextNode = head.getNext();
+	        head.next = null;
+	        head = nextNode;
+	        length--;
+	        if (isEmpty()) {
+	            rear = null;//处理队列出队后，队列为空时的队尾置空
+	        }
+	        return data;
+	    }
+	
+	    public int getLength() {
+	        return length;
+	    }
+	
+	    public boolean isEmpty() {
+	        return 0 == length;
+	    }
+	
+	    public int head() {
+	        if (isEmpty()) {
+	            throw new IllegalStateException("underflow exception:queue is empty.");
+	        }
+	        return head.getData();
+	    }
+	
+	    @Override
+	    public String toString() {
+	        StringBuilder result = new StringBuilder();
+	        LinkedNode front = head;
+	        result.append("LinkedQueue{");
+	        while (null != front) {
+	            result.append(front.getData());
+	            if (null != front.getNext()) {
+	                result.append(", ");
+	            }
+	            front = front.getNext();
+	        }
+	        result.append(isEmpty() ? "length = " + length : ", length = " + length);
+	        result.append("}");
+	        return result.toString();
+	    }
+	
+	    private class LinkedNode {
+	        private int data;
+	        private LinkedNode next;
+	
+	        public LinkedNode(int data) {
+	            this.data = data;
+	        }
+	
+	        public void setNext(LinkedNode next) {
+	            this.next = next;
+	        }
+	
+	        public LinkedNode getNext() {
+	            return next;
+	        }
+	
+	        public int getData() {
+	            return data;
+	        }
+	    }
 	}
 	
 	```
