@@ -3,3 +3,33 @@
 
 ----------
 # Trees #
+
+1. **What** is a Tree?
+	- 非线性数据结构
+2.  **Glossay** 术语
+	- root
+	- edge
+	- leaf
+	- sibling
+	- ancestor
+	- descendant
+	- level
+	- depth
+	- height
+	- height of a tree
+	- depth of a tree
+	- the size of a node
+3.  Binary Tree
+	- Strict Binary Tree
+	- Full Binary Tree
+	- Complete Binary Tree
+4.  Binary Tree Traversals
+	- Preorder Traversal(DLR) 时间复杂度O(n)，空间复杂度O(n)
+		- visit the root
+		- visit the left subtree in preorder
+		- visit the right subtree in preorder
+	- Inorder Travelsals(LDR) 时间复杂度O(n)，空间复杂度O(n)
+		- traversal the left subtree in inorder
+		- traversal the root
+		- travesal the right subtree in inorder
+ 
