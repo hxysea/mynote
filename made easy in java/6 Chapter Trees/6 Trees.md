@@ -26,10 +26,14 @@
 4.  Binary Tree Traversals
 	- Preorder Traversal(DLR) 时间复杂度O(n)，空间复杂度O(n)
 		- visit the root
-		- visit the left subtree in preorder
-		- visit the right subtree in preorder
+		- traverse the left subtree in preorder
+		- traverse the right subtree in preorder
 	- Inorder Travelsals(LDR) 时间复杂度O(n)，空间复杂度O(n)
-		- traversal the left subtree in inorder
-		- traversal the root
-		- travesal the right subtree in inorder
+		- traverse the left subtree in inorder
+		- visit the root
+		- traverse the right subtree in inorder
+	- Postorder Traversal(LRD) 时间复杂度O(n)，空间复杂度O(n)
+		- traverse the left subtree in postorder
+		- traverse the right subtree in postorder
+		- visit the root
  
