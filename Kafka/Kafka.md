@@ -24,6 +24,7 @@
 	- 支持水平扩展  
 3. 优点
 	- 解耦
+		- 生产者与消费者解耦，降低了系统复杂性
 	- 冗余
 	- 扩展性
 	- 灵活性&峰值处理能力
@@ -49,4 +50,21 @@
 		- 完全的分布式系统，自动实现负载均衡
 		- 支持Hadoop数据并行加载
 		- 轻量级的消息系统，性能非常好
+5. e.g.
+	- "动态汇总"功能
+	- 相关性以及排序
+	- 安全
+	- 运营监控
+	- 报表和批处理  
+6. 组成
+	- ZooKeeper
+	- Kafka
+		- Producer
+		- Broker
+		- Consumer  
+			- consumer group
+7. 实现
+	- 一个Topic对应多个Consumer Group
+		- 实现广播，每个consumer有一个独立的group
+		- 实现单播，所有consumer在同一个group  
 
