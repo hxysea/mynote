@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)http://rockybean.info/2012/07/30/jafka-design -->
+<html class="no-js"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Kafka设计理念浅析 - Rockybean</title>
+
+    <!-- 使用url函数转换相关路径 -->
+    <link rel="stylesheet" href="./Kafka设计理念浅析 - Rockybean_files/normalize.min.css">
+    <link rel="stylesheet" href="./Kafka设计理念浅析 - Rockybean_files/grid.css">
+    <link rel="stylesheet" href="./Kafka设计理念浅析 - Rockybean_files/style.css">
+
+    <!--[if lt IE 9]>
+    <script src="//cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="//cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- 通过自有函数输出HTML头部信息 -->
+    <meta name="description" content="本文将从以下两个方面去尝试讲解Kafka的设计理念，主要参考文献在这里：Kafka设计背景及原因Kafka的设计特色">
+<meta name="keywords" content="jafka,kafka">
+<meta name="generator" content="Typecho 1.0/14.10.10">
+<meta name="template" content="default">
+<link rel="pingback" href="http://rockybean.info/action/xmlrpc">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://rockybean.info/action/xmlrpc?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://rockybean.info/action/xmlrpc?wlw">
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://rockybean.info/feed/2012/07/30/jafka-design">
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="http://rockybean.info/feed/rss/2012/07/30/jafka-design">
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="http://rockybean.info/feed/atom/2012/07/30/jafka-design">
+<script type="text/javascript">
+(function () {
+    window.TypechoComment = {
+        dom : function (id) {
+            return document.getElementById(id);
+        },
+    
+        create : function (tag, attr) {
+            var el = document.createElement(tag);
+        
+            for (var key in attr) {
+                el.setAttribute(key, attr[key]);
+            }
+        
+            return el;
+        },
+
+        reply : function (cid, coid) {
+            var comment = this.dom(cid), parent = comment.parentNode,
+                response = this.dom('respond-post-78'), input = this.dom('comment-parent'),
+                form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+                textarea = response.getElementsByTagName('textarea')[0];
+
+            if (null == input) {
+                input = this.create('input', {
+                    'type' : 'hidden',
+                    'name' : 'parent',
+                    'id'   : 'comment-parent'
+                });
+
+                form.appendChild(input);
+            }
+
+            input.setAttribute('value', coid);
+
+            if (null == this.dom('comment-form-place-holder')) {
+                var holder = this.create('div', {
+                    'id' : 'comment-form-place-holder'
+                });
+
+                response.parentNode.insertBefore(holder, response);
+            }
+
+            comment.appendChild(response);
+            this.dom('cancel-comment-reply-link').style.display = '';
+
+            if (null != textarea && 'text' == textarea.name) {
+                textarea.focus();
+            }
+
+            return false;
+        },
+
+        cancelReply : function () {
+            var response = this.dom('respond-post-78'),
+            holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+            if (null != input) {
+                input.parentNode.removeChild(input);
+            }
+
+            if (null == holder) {
+                return true;
+            }
+
+            this.dom('cancel-comment-reply-link').style.display = 'none';
+            holder.parentNode.insertBefore(response, holder);
+            return false;
+        }
+    };
+})();
+</script>
+<script type="text/javascript">
+(function () {
+    var event = document.addEventListener ? {
+        add: 'addEventListener',
+        focus: 'focus',
+        load: 'DOMContentLoaded'
+    } : {
+        add: 'attachEvent',
+        focus: 'onfocus',
+        load: 'onload'
+    };
+
+    document[event.add](event.load, function () {
+        var r = document.getElementById('respond-post-78');
+
+        if (null != r) {
+            var forms = r.getElementsByTagName('form');
+            if (forms.length > 0) {
+                var f = forms[0], textarea = f.getElementsByTagName('textarea')[0], added = false;
+
+                if (null != textarea && 'text' == textarea.name) {
+                    textarea[event.add](event.focus, function () {
+                        if (!added) {
+                            var input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = '_';
+                            input.value = (function () {
+    var _3og = 'e67'//'a'
++''///*'UF'*/'UF'
++//'V'
+'8'+'da'//'n'
++'de9'//'PUb'
++'1ea'//'5'
++//'R'
+'82e'+//'7Ij'
+'4'+'put'//'put'
++'688'//'B'
++/* 'Q'//'Q' */''+'M8g'//'M8g'
++'358'//'w'
++/* 'OZ9'//'OZ9' */''+'2'//'hH2'
++//'OrK'
+'adc'+//'Bo'
+'a8'+'72'//'Ov1'
++//'6EY'
+'f3', _V8B = [[16,19],[19,22]];
+    
+    for (var i = 0; i < _V8B.length; i ++) {
+        _3og = _3og.substring(0, _V8B[i][0]) + _3og.substring(_V8B[i][1]);
+    }
+
+    return _3og;
+})();
+
+                            f.appendChild(input);
+                            added = true;
+                        }
+                    });
+                }
+            }
+        }
+    });
+})();
+</script></head>
+<body>
+<!--[if lt IE 8]>
+    <div class="browsehappy" role="dialog">当前网页 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的访问, 请 <a href="http://browsehappy.com/">升级你的浏览器</a>.</div>
+<![endif]-->
+
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="row">
+            <div class="site-name col-mb-12 col-9">
+                <a id="logo" href="http://rockybean.info/">
+                                        Rockybean                </a>
+        	    <p class="description">Just Be Cool!!! 继往者，启来者，不过是个烂笔头！</p>
+            </div>
+            <div class="site-search col-3 kit-hidden-tb">
+                <form id="search" method="post" action="http://rockybean.info/2012/07/30/" role="search">
+                    <label for="s" class="sr-only">搜索关键字</label>
+                    <input type="text" name="s" class="text" placeholder="输入关键字搜索">
+                    <button type="submit" class="submit">搜索</button>
+                </form>
+            </div>
+            <div class="col-mb-12">
+                <nav id="nav-menu" class="clearfix" role="navigation">
+                    <a href="http://rockybean.info/">首页</a>
+                                                            <a href="http://rockybean.info/about.html" title="关于">关于</a>
+                                    </nav>
+            </div>
+        </div><!-- end .row -->
+    </div>
+</header><!-- end #header -->
+<div id="body">
+    <div class="container">
+        <div class="row">
+
+    
+    
+
+<div class="col-mb-12 col-8" id="main" role="main">
+    <article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <h1 class="post-title" itemprop="name headline"><a itemtype="url" href="http://rockybean.info/2012/07/30/jafka-design">Kafka设计理念浅析</a></h1>
+        <ul class="post-meta">
+            <li itemprop="author" itemscope="" itemtype="http://schema.org/Person">作者: <a itemprop="name" href="http://rockybean.info/author/1/" rel="author">rockybean</a></li>
+            <li>时间: <time datetime="2012-07-30T08:30:00+08:00" itemprop="datePublished">July 30, 2012</time></li>
+            <li>分类: <a href="http://rockybean.info/category/source_code/">源码解析</a></li>
+        </ul>
+        <div class="post-content" itemprop="articleBody">
+            <p>本文将从以下两个方面去尝试讲解Kafka的设计理念，主要参考文献在<a href="http://incubator.apache.org/kafka/design.html">这里</a>：</p>
+
+<ul>
+<li><p>Kafka设计背景及原因</p></li>
+<li><p>Kafka的设计特色</p></li>
+</ul>
+
+<!--more-->
+
+<h2>Kafka设计背景及原因</h2>
+
+<p>Kafka最初被LinkedIn设计来处理活动流数据(activity stream data)和系统处理数据(operaitonal data)。活动流数据是指像page view、用户搜索关键词等等通过用户操作产生的数据，它的常见场景有时间线(time line)即新鲜事提醒、用户浏览量 搜索量排名等等。系统处理数据是服务器性能相关的数据，如CPU、负载、用户请求数等，它的应用场景多数是为后台服务，如在安全方面，可以监控到恶意攻击服务器的用户，从而做出相应措施，还有监控服务器性能，在其出现问题时即时报警等。</p>
+
+<p>这两种数据都属于日志数据的范畴。常见的日志系统，如scribe等都是将这些数据收集起来，然后再通过线下批处理，如hadoop集群等，获取所需的结果。线下处理的频率一般不会太高，比如一个小时甚至一天一次，这是不适合做实时应用的，如timeline这种应用。现有的消息队列系统非常适合这种实时性要求高的场景，但是由于它们都是在内存中维护消息队列，所以处理数据的大小就受到了限制。看到这里，相信聪明的读者已经知晓了Kafka出现的原因，就是要将上面讲的这两种场景整合到一个系统中，即offline的大数据分析和online的实时数据分析都可以通过该系统实现。</p>
+
+<p>Kafka在设计上保留了消息队列的常用操作，而这也使得在其诞生后被越来越广泛的作为一个消息队列使用，而不仅仅局限于处理上面提到的两种数据。</p>
+
+<h2>Kafka的设计特色</h2>
+
+<p>Kafka在设计上有以下几个特色：</p>
+
+<ul>
+<li>消息数据通过磁盘线性存取</li>
+<li>强调吞吐率   </li>
+<li>消费状态由消费者自己维护</li>
+<li>分布式</li>
+</ul>
+
+<h3>消息数据通过磁盘线性存取</h3>
+
+<p>该特性应该是Kafka最让惊叹的特性。在我们的认识中，硬盘较内存的数据处理速度(读写)是慢很多的，所以基本所有设计数据处理的程序都是尽量使用内存。然而Kafka的设计者在经过一番调研测试后，大胆地采用了全硬盘存取消息数据的方案，他们的主要依据是：</p>
+
+<ul>
+<li><p>硬盘在线性读写的情况下性能优异。</p>
+
+<ul>
+<li>有测试表明在一个6 7200rpm 的SATA RAID-5 阵列上，线性写可以达到300MB/Sec，而随机写只有50KB/Sec。线性读写之所以可以有这么优异的表现与文件系统是分不开的，因为对写操作，操作系统一般会进行缓冲，而对于读操作，操作系统会进行预抓取的缓冲操作，这会极大地提高读取效率。又由于这一层缓存操作是在OS级的，也就意味着即便Kafka挂掉了重启，缓存也不会失效。</li>
+</ul></li>
+<li><p>减少JVM的GC触发。</p>
+
+<ul>
+<li>JVM中的对象会占用除实际数据外的较多空间（如类的信息等等），结构不够紧凑，浪费空间。而当内存中维护的消息数据逐渐增多后，GC便会被频繁触发，这会极大影响应用的响应速度。因此，舍弃内存，使用磁盘可以减少GC触发带来的影响。</li>
+</ul></li>
+</ul>
+
+<p>Kafka<a href="http://research.microsoft.com/en-us/um/people/srikanth/netdb11/netdb11papers/netdb11-final12.pdf">论文</a>中与ActiveMQ等消息队列的性能比较也进一步肯定了Kafka的这一设计理念。</p>
+
+<h3>强调吞吐率</h3>
+
+<p>Kafka的设计初衷便是要能处理TB级的数据，其更强调的是吞吐率。吞吐率表现在读和写两个方面，Kafka在这两个方面都做了很多优化。</p>
+
+<h4>写</h4>
+
+<p>前面的文章中我们曾经提到过kafka存储消息数据的形式，如下图：<br>
+topic-partition--0000.kafka<br>
+          --1024.kafka<br>
+          --2048.kafka<br>
+kafka在启动时会将该文件夹中的所有文件以channel形式打开，并且只有最后一个kafka文件以读写形式打开，其他都以只读方式打开，新到的消息都直接append到最后一个kafka文件中，这样就实现了顺序写。而前面已经提到，顺序写的性能是极高的，这样写的性能就有了保障。</p>
+
+<h4>读</h4>
+
+<p>Kafka在读方面使用了sendfile这个高级系统函数，也即zero-copy技术，感兴趣的同学可以去阅读<a href="http://www.ibm.com/developerworks/linux/library/j-zerocopy">IBM的文章</a>。<br>
+这项技术通过减少系统拷贝次数，极大地提高了数据传输的效率。简单说明如下：</p>
+
+<p>程序读文件内容，调用socket发送内容，过程涉及以下几个步骤</p>
+
+<ul>
+<li><p>调用syscall，如read，陷入内核，读文件内容到内核缓存区pagecache</p></li>
+<li><p>程序将文件内容由内核缓存区拷贝到用户空间内存</p></li>
+<li><p>调用syscall，如socket write函数，陷入内核，将用户空间的内容拷贝的socket缓冲区内存，准备发送</p></li>
+<li><p>将socket缓冲区内存拷贝到NIC（Network Interface Controller）缓冲区，发送数据。</p></li>
+</ul>
+
+<p>其中涉及了2次syscall和4次数据拷贝。相信读者一定发现这4次数据拷贝是显然没有必要的，直接把数据从pagecache的内核缓存区读到NIC缓冲区不就可以了吗？sendfile系统函数做的就是这件事情。显然这会极大地提升数据传输的效率。在java中对应的函数调用是</p>
+
+<pre><code>FileChannle.transferTo
+</code></pre>
+
+<p>另外，Kafka还通过多条数据压缩传输、存取的办法来进一步提升吞吐率。</p>
+
+<h3>消费状态由消费者自己维护</h3>
+
+<p>Kafka消息数据的消费状态由消费者自己维护，原因这里不再详述了，感兴趣的同学可以去阅读文章开头的参考文献。这里简单说一下这么做的好处：</p>
+
+<ul>
+<li><p>去除了服务端维护消费状态的压力。</p></li>
+<li><p>提升了消费者存储消费状态的自由度，如存储位置，可以存在zookeeper 数据库或者HDFS中，根据消费者自身的需求即可。</p></li>
+<li><p>针对特殊需求，如消息消费失败，消费者可以回滚而重新消费消息。</p></li>
+</ul>
+
+<h3>分布式</h3>
+
+<p>Kafka的broker producer和consumer都是可分布的，其实现是通过zookeeper来维护集群中这三者的信息，从而实现三者的交互，详细实现留待以后再说。</p>
+
+<p>通过上面的介绍相信大家已经对Kafka的设计有了一定的了解。这样的设计完全可以整合offline大数据处理和online实时处理的需求。对于offline处理，kafka支持将数据批量的迁移到hdfs中，而对于online的实时处理，只要合理的设置consumer处理特性就可以很容易地做到。LinkedIn在其文章中曾举到一个kafka的应用案例，这里与大家分享下。使用kafka来更新索引，当用户更新了自己的数据后，producer便产生一条消息发送到broker，consumer会即时获取该数据，进而更新索引，这样也就可以做到搜索时数据”秒级更新“的特性了。</p>
+
+<h2>小结</h2>
+
+<p>本文尝试向大家讲解Kafka的由来和设计特色，但笔者能力有限，如果有理解错误的地方，欢迎读者留言交流。接下来，笔者会针对kafka源码进行简单的剖析，也希望感兴趣的读者可以参与进来。</p>
+        </div>
+        <p itemprop="keywords" class="tags">标签: <a href="http://rockybean.info/tag/jafka/">jafka</a>, <a href="http://rockybean.info/tag/kafka/">kafka</a></p>
+    </article>
+
+    <div id="comments">
+        
+        <div id="respond-post-78" class="respond">
+        <div class="cancel-comment-reply">
+        <a id="cancel-comment-reply-link" href="http://rockybean.info/2012/07/30/jafka-design#respond-post-78" rel="nofollow" style="display:none" onclick="return TypechoComment.cancelReply();">取消回复</a>        </div>
+    
+    	<h3 id="response">添加新评论</h3>
+    	<form method="post" action="http://rockybean.info/2012/07/30/jafka-design/comment" id="comment-form" role="form">
+                		<p>
+                <label for="author" class="required">称呼</label>
+    			<input type="text" name="author" id="author" class="text" value="" required="">
+    		</p>
+    		<p>
+                <label for="mail" class="required">Email</label>
+    			<input type="email" name="mail" id="mail" class="text" value="" required="">
+    		</p>
+    		<p>
+                <label for="url">网站</label>
+    			<input type="url" name="url" id="url" class="text" placeholder="http://" value="">
+    		</p>
+                		<p>
+                <label for="textarea" class="required">内容</label>
+                <textarea rows="8" cols="50" name="text" id="textarea" class="textarea" required=""></textarea>
+            </p>
+    		<p>
+                <button type="submit" class="submit">提交评论</button>
+            </p>
+    	</form>
+    </div>
+    </div>
+
+    <ul class="post-near">
+        <li>上一篇: <a href="http://rockybean.info/2012/07/26/jafka-broker" title="Jafka 服务端(Broker)使用示例与配置简要说明">Jafka 服务端(Broker)使用示例与配置简要说明</a></li>
+        <li>下一篇: <a href="http://rockybean.info/2012/08/01/jafka-src" title="Jafka Broker代码阅读之总览">Jafka Broker代码阅读之总览</a></li>
+    </ul>
+</div><!-- end #main-->
+
+<div class="col-mb-12 col-offset-1 col-3 kit-hidden-tb" id="secondary" role="complementary">
+        <section class="widget">
+		<h3 class="widget-title">最新文章</h3>
+        <ul class="widget-list">
+            <li><a href="http://rockybean.info/2016/12/05/180">crontab不能运行的问题</a></li><li><a href="http://rockybean.info/2016/05/24/under_gethostname">gethostname的背后机制</a></li><li><a href="http://rockybean.info/2015/04/13/ssh-login-debug-method-and-problems">ssh登录的调试方法和常见问题</a></li><li><a href="http://rockybean.info/2015/02/27/elasticsearch-date-type">Elasticsearch Date类型使用技巧</a></li><li><a href="http://rockybean.info/2015/02/25/kibana4-nginx-reverse-proxy">Kibana4使用nginx作反向代理</a></li><li><a href="http://rockybean.info/2015/02/09/elasticsearch-immense-term-exception">ElasticSearch immense term错误</a></li><li><a href="http://rockybean.info/2015/02/01/idea-integrate-xdebug">IDEA集成xdebug远程调试功能</a></li><li><a href="http://rockybean.info/2015/01/19/tar_chown_extraced_file">一次由tar解压引起的ssh登录失败事故</a></li><li><a href="http://rockybean.info/2015/01/02/pdu">名词解释之PDU</a></li><li><a href="http://rockybean.info/2014/11/29/tcp_self_connection">tcp自连接问题</a></li>        </ul>
+    </section>
+    
+        <section class="widget">
+		<h3 class="widget-title">最近回复</h3>
+        <ul class="widget-list">
+                            <li><a href="http://rockybean.info/2012/08/01/jafka-src#comment-789">xjk</a>: 顶一个</li>
+                    <li><a href="http://rockybean.info/about.html#comment-788">adfa</a>: jafka是啥，只听说过kafka</li>
+                    <li><a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver#comment-787">chinesejie</a>: 这段socketServer 代码 跟cobar 中间件的代码 ...</li>
+                    <li><a href="http://rockybean.info/2012/07/24/jafka-consumer#comment-786">chinesejie</a>: sorry 这段没错。</li>
+                    <li><a href="http://rockybean.info/2012/07/24/jafka-consumer#comment-785">chinesejie</a>: 比如1024其实的消息数据为90B，其后的消息数据为30B，这两...</li>
+                    <li><a href="http://rockybean.info/2012/07/24/jafka-consumer#comment-784">chinesejie</a>: 如果是一个broker集群，那么可能在一个broker上是tes...</li>
+                    <li><a href="http://rockybean.info/about.html#comment-783">yy</a>: 非常感谢jafka相关内容的分享！</li>
+                    <li><a href="http://rockybean.info/2015/02/27/elasticsearch-date-type#comment-781">kenshin23333</a>: 好用！感谢楼主！</li>
+                    <li><a href="http://rockybean.info/2012/08/03/jafka-message#comment-780">宋鑫</a>: 好文要顶</li>
+                    <li><a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver#comment-779">宋鑫</a>: 可以考虑同步转载到CSDN，要不好像没什么人看</li>
+                </ul>
+    </section>
+    
+        <section class="widget">
+		<h3 class="widget-title">分类</h3>
+        <ul class="widget-list"><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/default/">默认分类</a></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/tech/">技术</a><ul class="widget-list"><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/network/">网络</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/algorithm/">算法</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/devops/">运维</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/language/">语言</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/source_code/">源码解析</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/database/">数据库</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/bug/">BUG</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/tools/">七种武器</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/front_end/">前端技术</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/optimize/">优化</a></li></ul></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/book/">读书</a><ul class="widget-list"><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/tech_book/">技术这档子事</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/art_book/">文艺那档子事</a></li></ul></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/mac/">mac大法</a></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/talk/">随便扯扯</a></li></ul>	</section>
+    
+        <section class="widget">
+		<h3 class="widget-title">归档</h3>
+        <ul class="widget-list">
+            <li><a href="http://rockybean.info/2016/12/">December 2016</a></li><li><a href="http://rockybean.info/2016/05/">May 2016</a></li><li><a href="http://rockybean.info/2015/04/">April 2015</a></li><li><a href="http://rockybean.info/2015/02/">February 2015</a></li><li><a href="http://rockybean.info/2015/01/">January 2015</a></li><li><a href="http://rockybean.info/2014/11/">November 2014</a></li><li><a href="http://rockybean.info/2014/10/">October 2014</a></li><li><a href="http://rockybean.info/2014/08/">August 2014</a></li><li><a href="http://rockybean.info/2014/07/">July 2014</a></li><li><a href="http://rockybean.info/2014/04/">April 2014</a></li><li><a href="http://rockybean.info/2013/11/">November 2013</a></li><li><a href="http://rockybean.info/2012/08/">August 2012</a></li><li><a href="http://rockybean.info/2012/07/">July 2012</a></li>        </ul>
+	</section>
+    
+    	<section class="widget">
+		<h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+                            <li class="last"><a href="http://rockybean.info/admin/login.php">登录</a></li>
+                        <li><a href="http://rockybean.info/feed/">文章 RSS</a></li>
+            <li><a href="http://rockybean.info/feed/comments/">评论 RSS</a></li>
+            <li><a href="http://www.typecho.org/">Typecho</a></li>
+        </ul>
+	</section>
+    <section class="widget">
+	<ul class="widet-list" style="margin-left:99999px;">
+<li><a href="http://www.cdliqing.com/">创大沥青</a></li>
+</ul>
+</section>
+
+</div><!-- end #sidebar -->
+
+        </div><!-- end .row -->
+    </div>
+</div><!-- end #body -->
+
+<footer id="footer" role="contentinfo">
+    © 2017 <a href="http://rockybean.info/">Rockybean</a>.
+    由 <a href="http://www.typecho.org/">Typecho</a> 强力驱动.
+</footer><!-- end #footer -->
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F910e4fd2443eac0ca71a16d63ba69db5' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="./Kafka设计理念浅析 - Rockybean_files/h.js.下载" type="text/javascript"></script><a href="http://tongji.baidu.com/hm-web/welcome/ico?s=910e4fd2443eac0ca71a16d63ba69db5" target="_blank"><img border="0" src="./Kafka设计理念浅析 - Rockybean_files/21.gif" width="20" height="20"></a>
+
+
+
+
+</body></html>
