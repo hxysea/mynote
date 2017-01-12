@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<!-- saved from url=(0058)http://rockybean.info/2012/08/02/jafka-broker-socketserver -->
+<html class="no-js"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Jafka Broker源码阅读之SocketServer解析 - Rockybean</title>
+
+    <!-- 使用url函数转换相关路径 -->
+    <link rel="stylesheet" href="./Jafka Broker源码阅读之SocketServer解析 - Rockybean_files/normalize.min.css">
+    <link rel="stylesheet" href="./Jafka Broker源码阅读之SocketServer解析 - Rockybean_files/grid.css">
+    <link rel="stylesheet" href="./Jafka Broker源码阅读之SocketServer解析 - Rockybean_files/style.css">
+
+    <!--[if lt IE 9]>
+    <script src="//cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="//cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- 通过自有函数输出HTML头部信息 -->
+    <meta name="description" content="本文将讲解Jafka SocketServer的实现，从前一篇总览的文章中，我们知道SocketServer的主要调用方法是startUp，那么我们就来研究下这个方法做了什么，不过在此之前我们还...">
+<meta name="keywords" content="jafka">
+<meta name="generator" content="Typecho 1.0/14.10.10">
+<meta name="template" content="default">
+<link rel="pingback" href="http://rockybean.info/action/xmlrpc">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://rockybean.info/action/xmlrpc?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://rockybean.info/action/xmlrpc?wlw">
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://rockybean.info/feed/2012/08/02/jafka-broker-socketserver">
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="http://rockybean.info/feed/rss/2012/08/02/jafka-broker-socketserver">
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="http://rockybean.info/feed/atom/2012/08/02/jafka-broker-socketserver">
+<script type="text/javascript">
+(function () {
+    window.TypechoComment = {
+        dom : function (id) {
+            return document.getElementById(id);
+        },
+    
+        create : function (tag, attr) {
+            var el = document.createElement(tag);
+        
+            for (var key in attr) {
+                el.setAttribute(key, attr[key]);
+            }
+        
+            return el;
+        },
+
+        reply : function (cid, coid) {
+            var comment = this.dom(cid), parent = comment.parentNode,
+                response = this.dom('respond-post-74'), input = this.dom('comment-parent'),
+                form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+                textarea = response.getElementsByTagName('textarea')[0];
+
+            if (null == input) {
+                input = this.create('input', {
+                    'type' : 'hidden',
+                    'name' : 'parent',
+                    'id'   : 'comment-parent'
+                });
+
+                form.appendChild(input);
+            }
+
+            input.setAttribute('value', coid);
+
+            if (null == this.dom('comment-form-place-holder')) {
+                var holder = this.create('div', {
+                    'id' : 'comment-form-place-holder'
+                });
+
+                response.parentNode.insertBefore(holder, response);
+            }
+
+            comment.appendChild(response);
+            this.dom('cancel-comment-reply-link').style.display = '';
+
+            if (null != textarea && 'text' == textarea.name) {
+                textarea.focus();
+            }
+
+            return false;
+        },
+
+        cancelReply : function () {
+            var response = this.dom('respond-post-74'),
+            holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+            if (null != input) {
+                input.parentNode.removeChild(input);
+            }
+
+            if (null == holder) {
+                return true;
+            }
+
+            this.dom('cancel-comment-reply-link').style.display = 'none';
+            holder.parentNode.insertBefore(response, holder);
+            return false;
+        }
+    };
+})();
+</script>
+<script type="text/javascript">
+(function () {
+    var event = document.addEventListener ? {
+        add: 'addEventListener',
+        focus: 'focus',
+        load: 'DOMContentLoaded'
+    } : {
+        add: 'attachEvent',
+        focus: 'onfocus',
+        load: 'onload'
+    };
+
+    document[event.add](event.load, function () {
+        var r = document.getElementById('respond-post-74');
+
+        if (null != r) {
+            var forms = r.getElementsByTagName('form');
+            if (forms.length > 0) {
+                var f = forms[0], textarea = f.getElementsByTagName('textarea')[0], added = false;
+
+                if (null != textarea && 'text' == textarea.name) {
+                    textarea[event.add](event.focus, function () {
+                        if (!added) {
+                            var input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = '_';
+                            input.value = (function () {
+    var _cAKgP = //'lvR'
+'0'+//'0DS'
+'a5a'+//'RNM'
+'f'+//'SB'
+'c40'+//'Y'
+'3'+//'37y'
+'42'+//'FYF'
+'FYF'+'239'//'m'
++'1cc'//'dHO'
++''///*'De'*/'De'
++'d7f'//'l0'
++//'s'
+'s'+'af1'//'E'
++//'A7'
+'b00'+//'73F'
+'0'+'CkN'//'CkN'
++/* '4'//'4' */''+//'T'
+'T'+'e33'//'gK'
++'3'//'c2'
++//'492'
+'0', _azwkBgt = [[11,14],[20,21],[27,30],[27,28]];
+    
+    for (var i = 0; i < _azwkBgt.length; i ++) {
+        _cAKgP = _cAKgP.substring(0, _azwkBgt[i][0]) + _cAKgP.substring(_azwkBgt[i][1]);
+    }
+
+    return _cAKgP;
+})();
+
+                            f.appendChild(input);
+                            added = true;
+                        }
+                    });
+                }
+            }
+        }
+    });
+})();
+</script></head>
+<body>
+<!--[if lt IE 8]>
+    <div class="browsehappy" role="dialog">当前网页 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的访问, 请 <a href="http://browsehappy.com/">升级你的浏览器</a>.</div>
+<![endif]-->
+
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="row">
+            <div class="site-name col-mb-12 col-9">
+                <a id="logo" href="http://rockybean.info/">
+                                        Rockybean                </a>
+        	    <p class="description">Just Be Cool!!! 继往者，启来者，不过是个烂笔头！</p>
+            </div>
+            <div class="site-search col-3 kit-hidden-tb">
+                <form id="search" method="post" action="http://rockybean.info/2012/08/02/" role="search">
+                    <label for="s" class="sr-only">搜索关键字</label>
+                    <input type="text" name="s" class="text" placeholder="输入关键字搜索">
+                    <button type="submit" class="submit">搜索</button>
+                </form>
+            </div>
+            <div class="col-mb-12">
+                <nav id="nav-menu" class="clearfix" role="navigation">
+                    <a href="http://rockybean.info/">首页</a>
+                                                            <a href="http://rockybean.info/about.html" title="关于">关于</a>
+                                    </nav>
+            </div>
+        </div><!-- end .row -->
+    </div>
+</header><!-- end #header -->
+<div id="body">
+    <div class="container">
+        <div class="row">
+
+    
+    
+
+<div class="col-mb-12 col-8" id="main" role="main">
+    <article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <h1 class="post-title" itemprop="name headline"><a itemtype="url" href="http://rockybean.info/2012/08/02/jafka-broker-socketserver">Jafka Broker源码阅读之SocketServer解析</a></h1>
+        <ul class="post-meta">
+            <li itemprop="author" itemscope="" itemtype="http://schema.org/Person">作者: <a itemprop="name" href="http://rockybean.info/author/1/" rel="author">rockybean</a></li>
+            <li>时间: <time datetime="2012-08-02T08:15:00+08:00" itemprop="datePublished">August 2, 2012</time></li>
+            <li>分类: <a href="http://rockybean.info/category/source_code/">源码解析</a></li>
+        </ul>
+        <div class="post-content" itemprop="articleBody">
+            <p>本文将讲解Jafka SocketServer的实现，从前一篇总览的文章中，我们知道SocketServer的主要调用方法是startUp，那么我们就来研究下这个方法做了什么，不过在此之前我们还是先看下它的构造函数。</p>
+
+<!--more-->
+
+<pre><code class="lang-java"><br>   public SocketServer(RequestHandlerFactory handlerFactory,ServerConfig serverConfig) {
+        super();
+        //broker配置信息
+        this.serverConfig = serverConfig;
+        //消息数据的处理类
+        this.handlerFactory = handlerFactory;
+    //每个请求包的最大值，对应max.socket.request.bytes配置
+        this.maxRequestSize = serverConfig.getMaxSocketRequestSize();
+        //worker线程组，负责处理具体的socket读写请求
+        this.processors = new Processor[serverConfig.getNumThreads()];
+        //broker信息监控类
+        this.stats = new SocketServerStats(1000L * 1000L * 1000L * serverConfig.getMonitoringPeriodSecs());
+        //acceptor处理连接请求类
+        this.acceptor = new Acceptor(serverConfig.getPort(), //
+                processors, //
+                serverConfig.getSocketSendBuffer(), //
+                serverConfig.getSocketReceiveBuffer());
+   }
+</code></pre>
+
+<p>构造函数所做的事情已经在注释中有所说明，这里面都是一些初始化的操作，虽然没有实质性的线程启动等，但相信聪明读者已经注意到了acceptor processor handleractory这几个名词，并且从它们的名字上也基本可以大略地猜测其作用。</p>
+
+<h2>SocketServer.startup</h2>
+
+<p>下面就让我们在startup方法中揭开这些对象的面纱。</p>
+
+<pre><code class="lang-java"><br>   public void startup() throws InterruptedException {
+        //每个processor可以处理的最大连接数
+        final int maxCacheConnectionPerThread = serverConfig.getMaxConnections() / processors.length;
+        logger.info("start " + processors.length + " Processor threads");
+        //初始化并启动所有的Processor线程，其数目默认为cpu个数，可以通过num.threads来配置
+        for (int i = 0; i &lt; processors.length; i++) {
+            processors[i] = new Processor(handlerFactory, stats, maxRequestSize, maxCacheConnectionPerThread);
+            Utils.newThread("jafka-processor-" + i, processors[i], false).start();
+        }
+        //初始化并启动acceptor线程
+        Utils.newThread("jafka-acceptor", acceptor, false).start();
+        acceptor.awaitStartup();
+    }
+
+</code></pre>
+
+<p>startup方法做的事情很简单，启动一个acceptor线程和多个processor线程，下图是Acceptor和Processor的类图。</p>
+
+<p><img src="./Jafka Broker源码阅读之SocketServer解析 - Rockybean_files/729127199.png" alt="acceptor类图"></p>
+
+<h2>AbstractServerThread</h2>
+
+<p>我们先来看看Acceptor和Processor的父类AbstractServerThread，这个抽象类实现了Runnable和Closable接口，前者是实现run方法，传入线程执行，后者实现close方法，为了统一对象关闭调用。父类的意义在于抽取子类中有相同作用的代码，AbstractServerThread的实现也的确是这样的，源码如下：</p>
+
+<pre><code class="lang-java"><br>public abstract class AbstractServerThread implements Runnable,Closeable {
+
+    private Selector selector;
+    //启动和停止的闭锁
+    protected final CountDownLatch startupLatch = new CountDownLatch(1);
+    protected final CountDownLatch shutdownLatch = new CountDownLatch(1);
+    //线程状态布尔值
+    protected final AtomicBoolean alive = new AtomicBoolean(false);
+
+    final protected Logger logger = Logger.getLogger(getClass());
+    /**
+     * @return the selector
+     */
+    public Selector getSelector() {
+        if (selector == null) {
+            try {
+                selector = Selector.open();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return selector;
+    }
+
+    protected void closeSelector() {
+        Closer.closeQuietly(selector,logger);
+    }
+
+    //线程关闭方法
+    public void close() {
+        alive.set(false);
+        //唤醒调用了selector.select()的方法
+        selector.wakeup();
+        try {
+            //等待其他资源释放
+            shutdownLatch.await();
+        } catch (InterruptedException e) {
+            logger.error(e.getMessage(),e);
+        }
+    }
+
+    //调用该方法，表明线程已经完全启动
+    protected void startupComplete() {
+        alive.set(true);
+        startupLatch.countDown();
+    }
+
+    //调用该放法，表明线程已经完全关闭
+    protected void shutdownComplete() {
+        shutdownLatch.countDown();
+    }
+
+    protected boolean isRunning() {
+        return alive.get();
+    }
+
+    //阻塞直到线程完全启动，即调用了startupComplete方法
+    public void awaitStartup() throws InterruptedException {
+        startupLatch.await();
+    }
+}
+
+</code></pre>
+
+<p>上述代码中设计了java.nio和java.util.concurrent包中的类，关于这两个包中类的使用不是本文的重点，有疑惑的同学可以去搜索相关知识。AbstractServerThread类将线程启动关闭的方法和selector取出来，Selector是java nio中的一个类，未使用过的同学最好先去搜索下nio的相关知识，再继续往下看，否则会无法理解源码的意义。）</p>
+
+<h2>Acceptor</h2>
+
+<p>我们来看下Acceptor的代码，从其名称上我们可以看到它主要负责accept工作，即处理socket连接请求，其run方法如下：</p>
+
+<pre><code class="lang-java"><br>   public void run() {
+        final ServerSocketChannel serverChannel;
+        try {
+            //启动socket服务器，并注册连接事件到selector上
+            serverChannel = ServerSocketChannel.open();
+            serverChannel.configureBlocking(false);
+            serverChannel.socket().bind(new InetSocketAddress(port));
+            serverChannel.register(getSelector(), SelectionKey.OP_ACCEPT);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        //
+
+        logger.info("Awaiting connection on port "+port);
+        startupComplete();
+        //
+        int currentProcessor = 0;
+        //开始等待连接事件
+        while(isRunning()) {
+            int ready = -1;
+            try {
+                //阻塞至有连接请求或者500ms超时
+                ready = getSelector().select(500L);
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+            if(ready&lt;=0)continue;
+            //遍历所有的连接请求
+            Iterator&lt;SelectionKey&gt; iter = getSelector().selectedKeys().iterator();
+            while(iter.hasNext() &amp;&amp; isRunning())
+                try {
+                    SelectionKey key = iter.next();
+                    iter.remove();
+                    //
+                    if(key.isAcceptable()) {
+                        //处理连接请求，关键方法
+                        accept(key,processors[currentProcessor]);
+                    }else {
+                        throw new IllegalStateException("Unrecognized key state for acceptor thread.");
+                    }
+                    //以round-robin形式选择processor
+                    currentProcessor = (currentProcessor + 1) % processors.length;
+                } catch (Throwable t) {
+                    logger.error("Error in acceptor",t);
+                }
+            }
+        //run over
+        logger.info("Closing server socket and selector.");
+        Closer.closeQuietly(serverChannel, logger);
+        Closer.closeQuietly(getSelector(), logger);
+        shutdownComplete();
+   }
+
+</code></pre>
+
+<pre> 友情提醒：
+    如果上述代码看得您一头雾水，请先去补一下java nio的知识，笔者在第一次阅读该代码时也困惑了好一阵。
+</pre>
+
+<p>run方法主要做了以下两件事情：</p>
+
+<ul>
+<li>启动了一个Socket Server，绑定到port，然后等待连接事件的发生。</li>
+<li>当连接事件发生时，以round-robin形式选择processor，调用ccept方法，将该连接传入processor处理。</li>
+</ul>
+
+<p>因此，accept方法是处理的关键，代码如下：</p>
+
+<pre><code class="lang-java">private void accept(SelectionKey key, Processor processor) throws IOException{
+        ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
+        serverSocketChannel.socket().setReceiveBufferSize(receiveBufferSize);
+        //接受连接请求，获取socketChannel
+        SocketChannel socketChannel = serverSocketChannel.accept();
+        //配置channel为非阻塞方式
+        socketChannel.configureBlocking(false);
+        socketChannel.socket().setTcpNoDelay(true);
+        socketChannel.socket().setSendBufferSize(sendBufferSize);
+        //传入processor
+        processor.accept(socketChannel);
+    }
+
+//processor.accept
+public void accept(SocketChannel socketChannel) {
+        //将该channel加入newConnections这个blockingQueue中，等待processor在新一轮循环中处理
+        newConnections.add(socketChannel);
+        //欢迎seletor，以便尽快处理新加入的channel
+        getSelector().wakeup();
+    }
+</code></pre>
+
+<p>accept方法执行逻辑也是很清晰的，首先接受连接请求，获得响应的channel，然后将processor会将该channel加入自己的队列中，等待处理。</p>
+
+<p>Acceptor类的主要作用到这里就讲清楚了，下面我们看看Processor类的实现。</p>
+
+<h2>Processor</h2>
+
+<p>Processor类负责实际的读写请求，所以其实现也稍显复杂，run方法如下：</p>
+
+<pre><code class="lang-java"><br>public void run() {
+ startupComplete();
+ while (isRunning()) {
+     try {
+         //处理连接队列中新加入的channel，其实就是注册读事件
+         configureNewConnections();
+         //等待读写请求事件
+         final Selector selector = getSelector();
+         int ready = selector.select(500);
+         if (ready &lt;= 0) continue;
+         Iterator&lt;SelectionKey&gt; iter = selector.selectedKeys().iterator();
+         while (iter.hasNext() &amp;&amp; isRunning()) {
+             SelectionKey key = null;
+             try {
+                 key = iter.next();
+                 iter.remove();
+                 if (key.isReadable()) {
+                     //读请求
+                     read(key);
+                 } else if (key.isWritable()) {
+                     //写请求
+                     write(key);
+                 } else if (!key.isValid()) {
+                     close(key);
+                 } else {
+                     throw new IllegalStateException("Unrecognized key state for processor thread.");
+                 }
+             } catch (EOFException eofe) {
+                 Socket socket = channelFor(key).socket();
+                 logger.debug(format("connection closed by %s:%d.", socket.getInetAddress(), socket.getPort()));
+                 close(key);
+             } catch (InvalidRequestException ire) {
+                 Socket socket = channelFor(key).socket();
+                 logger.info(format("Closing socket connection to %s:%d due to invalid request: %s", socket.getInetAddress(), socket.getPort(),
+                         ire.getMessage()));
+                 close(key);
+             } catch (Throwable t) {
+                 Socket socket = channelFor(key).socket();
+                 final String msg = "Closing socket for %s:%d becaulse of error";
+                 if (logger.isDebugEnabled()) {
+                     logger.error(format(msg, socket.getInetAddress(), socket.getPort()), t);
+                 } else {
+                     logger.error(format(msg, socket.getInetAddress(), socket.getPort()));
+                 }
+                 close(key);
+             }
+         }
+     } catch (IOException e) {
+         logger.error(e.getMessage(), e);
+     }
+
+ }
+ //
+ logger.info("Closing selector while shutting down");
+ closeSelector();
+ shutdownComplete();
+}
+</code></pre>
+
+<p>Processor的循环处理体中，首先处理连接队列中的新请求，方法为configNewConnection，其源码在下方，可以看到，其所做的就是将在该processor的selector上注册该channel的read事件，之后processor等待读写请求并做出响应的操作。</p>
+
+<p>这里有一个编程细节，希望大家可以注意，就是在上面processor的accept方法中，调用selector.wakeup方法，其作用便是唤醒selector.select(500)，使该线程立即执行，尽快处理新连入的channel。</p>
+
+<pre><code class="lang-java"><br>private void configureNewConnections() throws ClosedChannelException {
+  while (newConnections.size() &gt; 0) {
+      SocketChannel channel = newConnections.poll();
+      if (logger.isDebugEnabled()) {
+          logger.debug("Listening to new connection from " + channel.socket().getRemoteSocketAddress());
+      }
+      channel.register(getSelector(), SelectionKey.OP_READ);
+  }
+}
+</code></pre>
+
+<h3>read请求</h3>
+
+<p>下面我们看下read请求的处理方法。</p>
+
+<pre><code class="lang-java"><br> private void read(SelectionKey key) throws IOException {
+        SocketChannel socketChannel = channelFor(key);
+        Receive request = null;
+        if (key.attachment() == null) {
+            //第一次读取数据
+            request = new BoundedByteBufferReceive(maxRequestSize);
+            key.attach(request);
+        } else {
+            //多次数据时，直接由key的attachment中获取
+            request = (Receive) key.attachment();
+        }
+        //从channel中读取数据
+        int read = request.readFrom(socketChannel);
+        stats.recordBytesRead(read);
+        if (read &lt; 0) {
+            //没有消息数据
+            close(key);
+        } else if (request.complete()) {
+            //成功读取消息数据，传入handle处理
+            Send maybeResponse = handle(key, request);
+            key.attach(null);
+            //如果有返回数据，则注册write事件
+            if (maybeResponse != null) {
+                key.attach(maybeResponse);
+                key.interestOps(SelectionKey.OP_WRITE);
+            }
+        } else {
+            //传递数据多，要分多次读取，所以要再次注册read事件
+            key.interestOps(SelectionKey.OP_READ);
+            getSelector().wakeup();
+            if (logger.isTraceEnabled()) {
+                logger.trace("reading request not been done. " + request);
+            }
+        }
+    }
+
+private Send handle(SelectionKey key, Receive request) {
+        final short requestTypeId = request.buffer().getShort();
+        //获取request类型
+        final RequestKeys requestType = RequestKeys.valueOf(requestTypeId);
+        //获取对应种类的RequestHandler
+        RequestHandler handlerMapping = requesthandlerFactory.mapping(requestType, request);
+        if (handlerMapping == null) {
+            throw new InvalidRequestException("No handler found for request");
+        }
+        long start = System.nanoTime();
+        //调用handler方法，返回处理结果
+        Send maybeSend = handlerMapping.handler(requestType, request);
+        stats.recordRequest(requestType, System.nanoTime() - start);
+        return maybeSend;
+    }
+</code></pre>
+
+<p>代码逻辑请参照注释，简单说来就是先获取channel，然后尝试从channel中读取数据，如果没有获取数据，直接close；如果获取的数据不完整需要多次读取，就再注册read事件；如果已经获取所有数据了，那么传入handle方法执行相应的RequestHandler方法，如果返回值不为空，则注册写事件，将结果返回客户端。</p>
+
+<blockquote>
+  <p><code>提示</code>：Request Send以及RequestHandler会另外写文章分析，本文主要讲解SocketServer的处理逻辑，不再展开讲解。</p>
+</blockquote>
+
+<h3>write请求</h3>
+
+<p>下面我们看write请求的处理方法。</p>
+
+<pre><code class="lang-java"><br>private void write(SelectionKey key) throws IOException {
+  Send response = (Send) key.attachment();
+  SocketChannel socketChannel = channelFor(key);
+  //将response写到channel中
+  int written = response.writeTo(socketChannel);
+  stats.recordBytesWritten(written);
+  if (response.complete()) {
+      key.attach(null);
+      key.interestOps(SelectionKey.OP_READ);
+  } else {
+      key.interestOps(SelectionKey.OP_WRITE);
+      getSelector().wakeup();
+  }
+
+</code></pre>
+
+<p>写处理和读处理是类似的，一次写不完的就再注册写事件等待下一次写。</p>
+
+<h2>小结</h2>
+
+<p>通过上面的分析，相信大家脑海中已经对SocketServer有了大概的了解，它就是由一个acceptor和多个processor组成，前者负责处理连接请求，后者负责处理读写请求。这个实现简单灵活，processor的数目是可调节的，其性能也有相应的<a href="http://sna-projects.com/blog/2009/08/introducing-the-nio-socketserver-implementation/">测试</a>。<br>
+总的来说，SocketServer使用nio实现了一个高性能的socket服务器，感兴趣的同学可以去关注下目前NIO方面的一些框架<a href="http://mina.apache.org/">mina</a>、<a href="https://netty.io/">netty</a>、taobao开源的<a href="http://code.taobao.org/p/gecko/src/">gecko</a>等等，借助这些框架可以更快更好地实现高性能的socket服务器。虽然jafka在服务端是自己实现了socket服务端，但nio编程中有<a href="http://www.blogjava.net/killme2008/archive/2010/11/22/338420.html">许多陷阱和需要注意</a>的地方，即便是一些老手都经常在这上面再跟头，所以还是建议大家尽量使用框架。Nio编程中有许多细节要注意，比如关闭的操作，本文列出的代码中有响应关闭的操作，读者可以好好地体会下Jafka是如何在捕获各种异常的情况下来合理关闭资源的。</p>
+        </div>
+        <p itemprop="keywords" class="tags">标签: <a href="http://rockybean.info/tag/jafka/">jafka</a></p>
+    </article>
+
+    <div id="comments">
+        	<h3>已有 3 条评论</h3>
+    
+    <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-778" class="comment-body comment-parent comment-odd">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./Jafka Broker源码阅读之SocketServer解析 - Rockybean_files/61e489ce669e3311b60eccf326172ae6" alt="宋鑫" width="32" height="32"></span>
+        <cite class="fn" itemprop="name">宋鑫</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver#comment-778"><time itemprop="commentTime" datetime="2015-07-04T13:25:36+08:00">July 4th, 2015 at 01:25 pm</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>楼主这系列文章结束了么</p>    </div>
+    <div class="comment-reply">
+        <a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver?replyTo=778#respond-post-74" rel="nofollow" onclick="return TypechoComment.reply(&#39;comment-778&#39;, 778);">回复</a>    </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-779" class="comment-body comment-parent comment-even">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./Jafka Broker源码阅读之SocketServer解析 - Rockybean_files/61e489ce669e3311b60eccf326172ae6" alt="宋鑫" width="32" height="32"></span>
+        <cite class="fn" itemprop="name">宋鑫</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver#comment-779"><time itemprop="commentTime" datetime="2015-07-04T14:03:02+08:00">July 4th, 2015 at 02:03 pm</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>可以考虑同步转载到CSDN，要不好像没什么人看</p>    </div>
+    <div class="comment-reply">
+        <a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver?replyTo=779#respond-post-74" rel="nofollow" onclick="return TypechoComment.reply(&#39;comment-779&#39;, 779);">回复</a>    </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-787" class="comment-body comment-parent comment-odd">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./Jafka Broker源码阅读之SocketServer解析 - Rockybean_files/272f71c6c43a23d7df1a5c114c951ab1" alt="chinesejie" width="32" height="32"></span>
+        <cite class="fn" itemprop="name">chinesejie</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver#comment-787"><time itemprop="commentTime" datetime="2016-05-25T15:32:28+08:00">May 25th, 2016 at 03:32 pm</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>这段socketServer 代码 跟cobar 中间件的代码  太相似了。</p>    </div>
+    <div class="comment-reply">
+        <a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver?replyTo=787#respond-post-74" rel="nofollow" onclick="return TypechoComment.reply(&#39;comment-787&#39;, 787);">回复</a>    </div>
+    </li>
+</ol>
+        
+    
+        <div id="respond-post-74" class="respond">
+        <div class="cancel-comment-reply">
+        <a id="cancel-comment-reply-link" href="http://rockybean.info/2012/08/02/jafka-broker-socketserver#respond-post-74" rel="nofollow" style="display:none" onclick="return TypechoComment.cancelReply();">取消回复</a>        </div>
+    
+    	<h3 id="response">添加新评论</h3>
+    	<form method="post" action="http://rockybean.info/2012/08/02/jafka-broker-socketserver/comment" id="comment-form" role="form">
+                		<p>
+                <label for="author" class="required">称呼</label>
+    			<input type="text" name="author" id="author" class="text" value="" required="">
+    		</p>
+    		<p>
+                <label for="mail" class="required">Email</label>
+    			<input type="email" name="mail" id="mail" class="text" value="" required="">
+    		</p>
+    		<p>
+                <label for="url">网站</label>
+    			<input type="url" name="url" id="url" class="text" placeholder="http://" value="">
+    		</p>
+                		<p>
+                <label for="textarea" class="required">内容</label>
+                <textarea rows="8" cols="50" name="text" id="textarea" class="textarea" required=""></textarea>
+            </p>
+    		<p>
+                <button type="submit" class="submit">提交评论</button>
+            </p>
+    	</form>
+    </div>
+    </div>
+
+    <ul class="post-near">
+        <li>上一篇: <a href="http://rockybean.info/2012/08/01/jafka-src" title="Jafka Broker代码阅读之总览">Jafka Broker代码阅读之总览</a></li>
+        <li>下一篇: <a href="http://rockybean.info/2012/08/03/jafka-message" title="Jafka 源码阅读之通信协议及相关类解析">Jafka 源码阅读之通信协议及相关类解析</a></li>
+    </ul>
+</div><!-- end #main-->
+
+<div class="col-mb-12 col-offset-1 col-3 kit-hidden-tb" id="secondary" role="complementary">
+        <section class="widget">
+		<h3 class="widget-title">最新文章</h3>
+        <ul class="widget-list">
+            <li><a href="http://rockybean.info/2016/12/05/180">crontab不能运行的问题</a></li><li><a href="http://rockybean.info/2016/05/24/under_gethostname">gethostname的背后机制</a></li><li><a href="http://rockybean.info/2015/04/13/ssh-login-debug-method-and-problems">ssh登录的调试方法和常见问题</a></li><li><a href="http://rockybean.info/2015/02/27/elasticsearch-date-type">Elasticsearch Date类型使用技巧</a></li><li><a href="http://rockybean.info/2015/02/25/kibana4-nginx-reverse-proxy">Kibana4使用nginx作反向代理</a></li><li><a href="http://rockybean.info/2015/02/09/elasticsearch-immense-term-exception">ElasticSearch immense term错误</a></li><li><a href="http://rockybean.info/2015/02/01/idea-integrate-xdebug">IDEA集成xdebug远程调试功能</a></li><li><a href="http://rockybean.info/2015/01/19/tar_chown_extraced_file">一次由tar解压引起的ssh登录失败事故</a></li><li><a href="http://rockybean.info/2015/01/02/pdu">名词解释之PDU</a></li><li><a href="http://rockybean.info/2014/11/29/tcp_self_connection">tcp自连接问题</a></li>        </ul>
+    </section>
+    
+        <section class="widget">
+		<h3 class="widget-title">最近回复</h3>
+        <ul class="widget-list">
+                            <li><a href="http://rockybean.info/2012/08/01/jafka-src#comment-789">xjk</a>: 顶一个</li>
+                    <li><a href="http://rockybean.info/about.html#comment-788">adfa</a>: jafka是啥，只听说过kafka</li>
+                    <li><a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver#comment-787">chinesejie</a>: 这段socketServer 代码 跟cobar 中间件的代码 ...</li>
+                    <li><a href="http://rockybean.info/2012/07/24/jafka-consumer#comment-786">chinesejie</a>: sorry 这段没错。</li>
+                    <li><a href="http://rockybean.info/2012/07/24/jafka-consumer#comment-785">chinesejie</a>: 比如1024其实的消息数据为90B，其后的消息数据为30B，这两...</li>
+                    <li><a href="http://rockybean.info/2012/07/24/jafka-consumer#comment-784">chinesejie</a>: 如果是一个broker集群，那么可能在一个broker上是tes...</li>
+                    <li><a href="http://rockybean.info/about.html#comment-783">yy</a>: 非常感谢jafka相关内容的分享！</li>
+                    <li><a href="http://rockybean.info/2015/02/27/elasticsearch-date-type#comment-781">kenshin23333</a>: 好用！感谢楼主！</li>
+                    <li><a href="http://rockybean.info/2012/08/03/jafka-message#comment-780">宋鑫</a>: 好文要顶</li>
+                    <li><a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver#comment-779">宋鑫</a>: 可以考虑同步转载到CSDN，要不好像没什么人看</li>
+                </ul>
+    </section>
+    
+        <section class="widget">
+		<h3 class="widget-title">分类</h3>
+        <ul class="widget-list"><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/default/">默认分类</a></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/tech/">技术</a><ul class="widget-list"><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/network/">网络</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/algorithm/">算法</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/devops/">运维</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/language/">语言</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/source_code/">源码解析</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/database/">数据库</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/bug/">BUG</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/tools/">七种武器</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/front_end/">前端技术</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/optimize/">优化</a></li></ul></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/book/">读书</a><ul class="widget-list"><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/tech_book/">技术这档子事</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/art_book/">文艺那档子事</a></li></ul></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/mac/">mac大法</a></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/talk/">随便扯扯</a></li></ul>	</section>
+    
+        <section class="widget">
+		<h3 class="widget-title">归档</h3>
+        <ul class="widget-list">
+            <li><a href="http://rockybean.info/2016/12/">December 2016</a></li><li><a href="http://rockybean.info/2016/05/">May 2016</a></li><li><a href="http://rockybean.info/2015/04/">April 2015</a></li><li><a href="http://rockybean.info/2015/02/">February 2015</a></li><li><a href="http://rockybean.info/2015/01/">January 2015</a></li><li><a href="http://rockybean.info/2014/11/">November 2014</a></li><li><a href="http://rockybean.info/2014/10/">October 2014</a></li><li><a href="http://rockybean.info/2014/08/">August 2014</a></li><li><a href="http://rockybean.info/2014/07/">July 2014</a></li><li><a href="http://rockybean.info/2014/04/">April 2014</a></li><li><a href="http://rockybean.info/2013/11/">November 2013</a></li><li><a href="http://rockybean.info/2012/08/">August 2012</a></li><li><a href="http://rockybean.info/2012/07/">July 2012</a></li>        </ul>
+	</section>
+    
+    	<section class="widget">
+		<h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+                            <li class="last"><a href="http://rockybean.info/admin/login.php">登录</a></li>
+                        <li><a href="http://rockybean.info/feed/">文章 RSS</a></li>
+            <li><a href="http://rockybean.info/feed/comments/">评论 RSS</a></li>
+            <li><a href="http://www.typecho.org/">Typecho</a></li>
+        </ul>
+	</section>
+    <section class="widget">
+	<ul class="widet-list" style="margin-left:99999px;">
+<li><a href="http://www.cdliqing.com/">创大沥青</a></li>
+</ul>
+</section>
+
+</div><!-- end #sidebar -->
+
+        </div><!-- end .row -->
+    </div>
+</div><!-- end #body -->
+
+<footer id="footer" role="contentinfo">
+    © 2017 <a href="http://rockybean.info/">Rockybean</a>.
+    由 <a href="http://www.typecho.org/">Typecho</a> 强力驱动.
+</footer><!-- end #footer -->
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F910e4fd2443eac0ca71a16d63ba69db5' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="./Jafka Broker源码阅读之SocketServer解析 - Rockybean_files/h.js.下载" type="text/javascript"></script><a href="http://tongji.baidu.com/hm-web/welcome/ico?s=910e4fd2443eac0ca71a16d63ba69db5" target="_blank"><img border="0" src="./Jafka Broker源码阅读之SocketServer解析 - Rockybean_files/21.gif" width="20" height="20"></a>
+
+
+
+
+</body></html>
