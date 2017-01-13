@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<!-- saved from url=(0051)http://rockybean.info/2012/08/14/jafka_producer_src -->
+<html class="no-js"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Jafka源码阅读之Producer - Rockybean</title>
+
+    <!-- 使用url函数转换相关路径 -->
+    <link rel="stylesheet" href="./Jafka源码阅读之Producer - Rockybean_files/normalize.min.css">
+    <link rel="stylesheet" href="./Jafka源码阅读之Producer - Rockybean_files/grid.css">
+    <link rel="stylesheet" href="./Jafka源码阅读之Producer - Rockybean_files/style.css">
+
+    <!--[if lt IE 9]>
+    <script src="//cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="//cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- 通过自有函数输出HTML头部信息 -->
+    <meta name="description" content="本文笔者会尝试给大家讲解producer的源码脉络，希望对大家有所帮助。">
+<meta name="keywords" content="jafka">
+<meta name="generator" content="Typecho 1.0/14.10.10">
+<meta name="template" content="default">
+<link rel="pingback" href="http://rockybean.info/action/xmlrpc">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://rockybean.info/action/xmlrpc?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://rockybean.info/action/xmlrpc?wlw">
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://rockybean.info/feed/2012/08/14/jafka_producer_src">
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="http://rockybean.info/feed/rss/2012/08/14/jafka_producer_src">
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="http://rockybean.info/feed/atom/2012/08/14/jafka_producer_src">
+<script type="text/javascript">
+(function () {
+    window.TypechoComment = {
+        dom : function (id) {
+            return document.getElementById(id);
+        },
+    
+        create : function (tag, attr) {
+            var el = document.createElement(tag);
+        
+            for (var key in attr) {
+                el.setAttribute(key, attr[key]);
+            }
+        
+            return el;
+        },
+
+        reply : function (cid, coid) {
+            var comment = this.dom(cid), parent = comment.parentNode,
+                response = this.dom('respond-post-63'), input = this.dom('comment-parent'),
+                form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+                textarea = response.getElementsByTagName('textarea')[0];
+
+            if (null == input) {
+                input = this.create('input', {
+                    'type' : 'hidden',
+                    'name' : 'parent',
+                    'id'   : 'comment-parent'
+                });
+
+                form.appendChild(input);
+            }
+
+            input.setAttribute('value', coid);
+
+            if (null == this.dom('comment-form-place-holder')) {
+                var holder = this.create('div', {
+                    'id' : 'comment-form-place-holder'
+                });
+
+                response.parentNode.insertBefore(holder, response);
+            }
+
+            comment.appendChild(response);
+            this.dom('cancel-comment-reply-link').style.display = '';
+
+            if (null != textarea && 'text' == textarea.name) {
+                textarea.focus();
+            }
+
+            return false;
+        },
+
+        cancelReply : function () {
+            var response = this.dom('respond-post-63'),
+            holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+            if (null != input) {
+                input.parentNode.removeChild(input);
+            }
+
+            if (null == holder) {
+                return true;
+            }
+
+            this.dom('cancel-comment-reply-link').style.display = 'none';
+            holder.parentNode.insertBefore(response, holder);
+            return false;
+        }
+    };
+})();
+</script>
+<script type="text/javascript">
+(function () {
+    var event = document.addEventListener ? {
+        add: 'addEventListener',
+        focus: 'focus',
+        load: 'DOMContentLoaded'
+    } : {
+        add: 'attachEvent',
+        focus: 'onfocus',
+        load: 'onload'
+    };
+
+    document[event.add](event.load, function () {
+        var r = document.getElementById('respond-post-63');
+
+        if (null != r) {
+            var forms = r.getElementsByTagName('form');
+            if (forms.length > 0) {
+                var f = forms[0], textarea = f.getElementsByTagName('textarea')[0], added = false;
+
+                if (null != textarea && 'text' == textarea.name) {
+                    textarea[event.add](event.focus, function () {
+                        if (!added) {
+                            var input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = '_';
+                            input.value = (function () {
+    var _8AZd = ''///*'P'*/'P'
++''///*'3jL'*/'3jL'
++//'nj'
+'d'+'b9'//'D'
++//'v8'
+'61'+//'VhU'
+'89'+/* 'S1'//'S1' */''+'61c'//'dJQ'
++//'HUN'
+'146'+//'wQm'
+'wQm'+'4f0'//'x'
++'3fc'//'su'
++/* 'G5S'//'G5S' */''+'7'//'BtF'
++//'z'
+'28e'+//'c'
+'57'+//'bfc'
+'11'+//'pF'
+'0'+''///*'B'*/'B'
++'dc0'//'K'
++//'J'
+'a', _SVBT1 = [[13,16]];
+    
+    for (var i = 0; i < _SVBT1.length; i ++) {
+        _8AZd = _8AZd.substring(0, _SVBT1[i][0]) + _8AZd.substring(_SVBT1[i][1]);
+    }
+
+    return _8AZd;
+})();
+
+                            f.appendChild(input);
+                            added = true;
+                        }
+                    });
+                }
+            }
+        }
+    });
+})();
+</script></head>
+<body>
+<!--[if lt IE 8]>
+    <div class="browsehappy" role="dialog">当前网页 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的访问, 请 <a href="http://browsehappy.com/">升级你的浏览器</a>.</div>
+<![endif]-->
+
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="row">
+            <div class="site-name col-mb-12 col-9">
+                <a id="logo" href="http://rockybean.info/">
+                                        Rockybean                </a>
+        	    <p class="description">Just Be Cool!!! 继往者，启来者，不过是个烂笔头！</p>
+            </div>
+            <div class="site-search col-3 kit-hidden-tb">
+                <form id="search" method="post" action="http://rockybean.info/2012/08/14/" role="search">
+                    <label for="s" class="sr-only">搜索关键字</label>
+                    <input type="text" name="s" class="text" placeholder="输入关键字搜索">
+                    <button type="submit" class="submit">搜索</button>
+                </form>
+            </div>
+            <div class="col-mb-12">
+                <nav id="nav-menu" class="clearfix" role="navigation">
+                    <a href="http://rockybean.info/">首页</a>
+                                                            <a href="http://rockybean.info/about.html" title="关于">关于</a>
+                                    </nav>
+            </div>
+        </div><!-- end .row -->
+    </div>
+</header><!-- end #header -->
+<div id="body">
+    <div class="container">
+        <div class="row">
+
+    
+    
+
+<div class="col-mb-12 col-8" id="main" role="main">
+    <article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <h1 class="post-title" itemprop="name headline"><a itemtype="url" href="http://rockybean.info/2012/08/14/jafka_producer_src">Jafka源码阅读之Producer</a></h1>
+        <ul class="post-meta">
+            <li itemprop="author" itemscope="" itemtype="http://schema.org/Person">作者: <a itemprop="name" href="http://rockybean.info/author/1/" rel="author">rockybean</a></li>
+            <li>时间: <time datetime="2012-08-14T07:46:00+08:00" itemprop="datePublished">August 14, 2012</time></li>
+            <li>分类: <a href="http://rockybean.info/category/source_code/">源码解析</a></li>
+        </ul>
+        <div class="post-content" itemprop="articleBody">
+            <p>本文笔者会尝试给大家讲解producer的源码脉络，希望对大家有所帮助。</p>
+
+<!--more-->
+
+<p>在讲解producer使用的<a href="http://rockybean.info/2012/07/23/jafka-producer/">文章</a>中，有如下代码，我们就从这里开始。</p>
+
+<pre><code class="lang-java">Properties props = new Properties();
+//指明获取发送地点的地址
+props.setProperty("zk.connect","localhost:2181");
+props.setProperty("serializer.class", StringEncoder.class.getName());
+Producer&lt;String,String&gt; producer = new Producer&lt;String, String&gt;(new  ProducerConfig(props));
+for(int i=0;i&lt;1000;i++){
+    //构造消息并发送
+    producer.send(new StringProducerData("hehe","hehe-data"+i));
+}
+producer.close();
+
+</code></pre>
+
+<p>我们来看下producer.send的时序图:</p>
+
+<p><img src="./Jafka源码阅读之Producer - Rockybean_files/382647523.png" alt="jafka_producer"></p>
+
+<p>下面我们结合上面的时序图和部分源码和大家说明producer调用send后发生了哪些事情。</p>
+
+<ul>
+<li>调用send方法后，会根据是否启用zookeeper来决定调用zkSend或者configSend，这里采用zkSend(<code>1.1</code>)进行说明。</li>
+</ul>
+
+<pre><code class="lang-java">private void zkSend(ProducerData&lt;K, V&gt; data) {
+ int numRetries = 0;
+ Broker brokerInfoOpt = null;
+ Partition brokerIdPartition = null;
+ //由zookeeper中获取可用的broker-partition列表
+ while (numRetries &lt;= config.getZkReadRetries() &amp;&amp; brokerInfoOpt == null) {
+     if (numRetries &gt; 0) {
+         logger.info("Try #" + numRetries + " ZK producer cache is stale. Refreshing it by reading from ZK again");
+         brokerPartitionInfo.updateInfo();
+     }
+     List&lt;Partition&gt; partitions = new ArrayList&lt;Partition&gt;(getPartitionListForTopic(data));
+     //选择传递消息的broker-partition:随机或者依据用户指定的partitioner
+     brokerIdPartition = partitions.get(getPartition(data.getKey(), partitions.size()));
+     if (brokerIdPartition != null) {
+         brokerInfoOpt = brokerPartitionInfo.getBrokerInfo(brokerIdPartition.brokerId);
+     }
+     numRetries++;
+ }
+ if (brokerInfoOpt == null) {
+     throw new NoBrokersForPartitionException("Invalid Zookeeper state. Failed to get partition for topic: " + data.getTopic() + " and key: "
+             + data.getKey());
+ }
+ //封装现有数据为ProducerPoolData对象
+ ProducerPoolData&lt;V&gt; ppd = producerPool.getProducerPoolData(data.getTopic(),//
+         new Partition(brokerIdPartition.brokerId, brokerIdPartition.partId),//
+         data.getData());
+ //使用producerPool发送数据
+ producerPool.send(ppd);
+}
+
+</code></pre>
+
+<p>zkSend主要做了以下的事情：</p>
+
+<ol>
+<li><p>连接zookeeper获取topic相关可用的broker-partition列表(<code>1.1.1</code>)， 然后调用<code>1.1.2 getPartition</code>方法选取一个partition，选取的策略是如果用户配置了<code>partitioner.class</code>，则调用该类选择，否则随机选择一个partition。</p></li>
+<li><p>将data和partition封装为ProducerPoolData对象(<code>1.1.3</code>)，之后调用producerPool的send方法(<code>1.1.4</code>)。该方法源码如下：</p></li>
+</ol>
+
+<pre><code class="lang-java">public void send(ProducerPoolData&lt;V&gt; ppd) {
+ //判断同步或异步发送
+ if (sync) {
+     //将消息封装成ByteBufferMessageSet，以便序列化为字节数组
+     Message[] messages = new Message[ppd.data.size()];
+     int index = 0;
+     for (V v : ppd.data) {
+         messages[index] = serializer.toMessage(v);
+         index++;
+     }
+     ByteBufferMessageSet bbms = new ByteBufferMessageSet(config.getCompressionCodec(), messages);
+     ProducerRequest request = new ProducerRequest(ppd.topic, ppd.partition.partId, bbms);
+     SyncProducer producer = syncProducers.get(ppd.partition.brokerId);
+     if (producer == null) {
+         throw new UnavailableProducerException("Producer pool has not been initialized correctly. " + "Sync Producer for broker "
+                 + ppd.partition.brokerId + " does not exist in the pool");
+     }
+     producer.send(request.topic, request.partition, request.messages);
+ } else {
+     //异步发送，逐个将data发送出去
+     AsyncProducer&lt;V&gt; asyncProducer = asyncProducers.get(ppd.partition.brokerId);
+     for (V v : ppd.data) {
+         asyncProducer.send(ppd.topic, v, ppd.partition.partId);
+     }
+ }
+}
+
+</code></pre>
+
+<p>该方法通过sync来判断是同步发送还是异步发送，如果是同步发送，则最后调用syncProducer(<code>1.1.4.1</code>)，否则调用AsyncProducer发送(<code>1.1.4.2</code>)。sync是在初始化Producer时，读取<code>producer.type</code>的设置来确定，如果为async则表明是异步发送。</p>
+
+<p>至此发送消息的过程便完结了，是不是很简单？</p>
+
+<h2>syncProducer的创建时机</h2>
+
+<p>我们一直没有讲syncProducer是何时建立的，或者说producer是什么时候建立到broker连接的，这是很关键的一部分，因为要没有连接，你的数据就没有传输管道了。其实从producerPool的类名，我们可以猜测这是一个集中了多个producer的池子，调用者依据需要从这个池子中取出producer，然后用它发送数据。那一个合情合理的设计便是这池子里的每一个producer对应一个broker，调用者依据自己发送的broker来获取producer。实际的设计也是这样的。其初始化的代码在producer的构造函数中，如下：</p>
+
+<pre><code class="lang-java">//获取所有的brokerPartition信息
+ this.zkEnabled = config.getZkConnect() != null;
+ if (this.brokerPartitionInfo == null) {
+     if (this.zkEnabled) {
+         Properties zkProps = new Properties();
+         zkProps.put("zk.connect", config.getZkConnect());
+         zkProps.put("zk.sessiontimeout.ms", "" + config.getZkSessionTimeoutMs());
+         zkProps.put("zk.connectiontimeout.ms", "" + config.getZkConnectionTimeoutMs());
+         zkProps.put("zk.synctime.ms", "" + config.getZkSyncTimeMs());
+         this.brokerPartitionInfo = new ZKBrokerPartitionInfo(new ZKConfig(zkProps), this);
+     } else {
+         this.brokerPartitionInfo = new ConfigBrokerPartitionInfo(config);
+     }
+ }
+ //建立到所有broker的连接，每个broker对应一个producer，SyncProducer或者AsyncProducer
+ if (this.populateProducerPool) {
+     for (Map.Entry&lt;Integer, Broker&gt; e : this.brokerPartitionInfo.getAllBrokerInfo().entrySet()) {
+         Broker b = e.getValue();
+         producerPool.addProducer(new Broker(e.getKey(), b.host, b.host, b.port));
+     }
+ }
+
+</code></pre>
+
+<p>首先从zookeeper中读取broker的相关信息，然后遍历所有的broker，调用producerPool的addProducer方法，建立producer，也就建立到broker的连接，addProducer的源码如下：</p>
+
+<pre><code class="lang-java">public void addProducer(Broker broker) {
+ Properties props = new Properties();
+ props.put("host", broker.host);
+ props.put("port", "" + broker.port);
+ props.putAll(config.getProperties());
+ //根据同步异步配置来建立producer
+ if (sync) {
+     SyncProducer producer = new SyncProducer(new SyncProducerConfig(props));
+     logger.info("Creating sync producer for broker id = " + broker.id + " at " + broker.host + ":" + broker.port);
+     syncProducers.put(broker.id, producer);
+ } else {
+     AsyncProducer&lt;V&gt; producer = new AsyncProducer&lt;V&gt;(new AsyncProducerConfig(props),//
+             new SyncProducer(new SyncProducerConfig(props)),//
+             serializer,//
+             eventHandler,//
+             config.getEventHandlerProperties(),//
+             this.callbackHandler, //
+             config.getCbkHandlerProperties());
+     producer.start();
+     logger.info("Creating async producer for broker id = " + broker.id + " at " + broker.host + ":" + broker.port);
+     asyncProducers.put(broker.id, producer);
+ }
+}
+
+</code></pre>
+
+<p>这段代码不难理解，放在这里的目的是让大家注意下创建AsyncProducer时，后面调用了start方法，也就是启动了一个异步发送的线程，后面会详细讲。</p>
+
+<h2>同步发送</h2>
+
+<p>producerPool的send方法在调用syncProducer发送数据之前，首先对要发送的多条数据进行了封装,将多条数据组装成ByteBufferMessageSet，这个类我们在之前的<a href="http://rockybean.info/2012/08/03/jafka-message/">文章</a>有提到，不熟悉的读者可以去看下，之后又将其传入ProducerRequest，最终调用了syncProducer的send方法。这里将数据转化为Message的代码<code>serializer.toMessage(v)</code>,即用户自定义的<code>serializer.class</code>发挥作用的地方。</p>
+
+<h3>send方法</h3>
+
+<p>下面我们来看下syncProducer的send方法的源码。</p>
+
+<pre><code class="lang-java"> private void send(Request request) {
+    //构造send对象，以备发送
+        BoundedByteBufferSend send = new BoundedByteBufferSend(request);
+        synchronized (lock) {
+            verifySendBuffer(send.getBuffer().slice());
+            //确认到broker的连接依然可用
+            getOrMakeConnection();
+            int written = -1;
+            try {
+            //写数据
+                written = send.writeCompletely(channel);
+            } catch (IOException e) {
+                // no way to tell if write succeeded. Disconnect and re-throw exception to let client handle retry
+                disconnect();
+                throw new RuntimeException(e);
+            } finally {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(format("write %d bytes data to %s:%d", written, host, port));
+                }
+            }
+            //记录连接次数，判断是否需要重新连接
+            sentOnConnection++;
+            if (sentOnConnection &gt;= config.reconnectInterval//
+                    || (config.reconnectTimeInterval &gt;= 0 &amp;&amp; System.currentTimeMillis() - lastConnectionTime &gt;= config.reconnectTimeInterval)) {
+                disconnect();
+                channel = connect();
+                sentOnConnection = 0;
+                lastConnectionTime = System.currentTimeMillis();
+            }
+        }
+    }
+
+</code></pre>
+
+<p>该方法的过程也很简单：构造一个Send对象来准备发送；检查到broker连接是不是可用的；写数据。</p>
+
+<p>Send对象在前面的文章中有提到，不了解的读者可以<a href="http://rockybean.info/2012/08/03/jafka-message/">前往</a>查看。同步发送的逻辑并不复杂，这里不多说明了。</p>
+
+<h2>异步发送</h2>
+
+<p>首先我们来看看AsyncProducer的构造函数。</p>
+
+<pre><code class="lang-java"><br>public AsyncProducer(AsyncProducerConfig config) {
+ this(config//
+         , new SyncProducer(config)//
+         , (Encoder&lt;T&gt;)Utils.getObject(config.getSerializerClass())//
+         , (EventHandler&lt;T&gt;)Utils.getObject(config.getEventHandler())//
+         , config.getEventHandlerProperties()//
+         , (CallbackHandler&lt;T&gt;)Utils.getObject(config.getCbkHandler())//
+         , config.getCbkHandlerProperties());
+}
+
+public AsyncProducer(AsyncProducerConfig config, //
+      SyncProducer producer, //
+      Encoder&lt;T&gt; serializer, //
+      EventHandler&lt;T&gt; eventHandler,//
+      Properties eventHandlerProperties, //
+      CallbackHandler&lt;T&gt; callbackHandler, //
+      Properties callbackHandlerProperties) {
+  super();
+  this.config = config;
+  //一个SyncProducer类
+  this.producer = producer;
+  this.serializer = serializer;
+  //消息可发送时的处理类
+  this.eventHandler = eventHandler;
+  this.eventHandlerProperties = eventHandlerProperties;
+  this.callbackHandler = callbackHandler;
+  this.callbackHandlerProperties = callbackHandlerProperties;
+  this.enqueueTimeoutMs = config.getEnqueueTimeoutMs();
+  //消息队列，缓冲待发送的消息
+  this.queue  = new LinkedBlockingQueue&lt;QueueItem&lt;T&gt;&gt;(config.getQueueSize());
+   //
+   if(eventHandler != null) {
+       eventHandler.init(eventHandlerProperties);
+   }
+   if(callbackHandler!=null) {
+       callbackHandler.init(callbackHandlerProperties);
+   }
+    //创建发送的线程
+   this.sendThread = new ProducerSendThread&lt;T&gt;("ProducerSendThread-" + asyncProducerID,
+           queue, //
+           serializer,//
+           producer, //
+           eventHandler!=null?eventHandler//发送事件触发的类
+                   :new DefaultEventHandler&lt;T&gt;(new ProducerConfig(config.getProperties()),callbackHandler), //
+           callbackHandler, //
+           config.getQueueTime(), //
+           config.getBatchSize());
+   this.sendThread.setDaemon(false);
+   AsyncProducerQueueSizeStats&lt;T&gt; stats = new AsyncProducerQueueSizeStats&lt;T&gt;(queue);
+   stats.setMbeanName(ProducerQueueSizeMBeanName+"-"+asyncProducerID);
+         Utils.registerMBean(stats);
+    }
+
+</code></pre>
+
+<p>关于AsyncProducer的一些变量含义，不清楚的读者可以去查看producer的<a href="http://rockybean.info/2012/07/23/jafka-producer/">文章</a>，这里就不再详述了。其中的eventHandler的使用时机时当asyncProducer发送消息时，下面会讲到。实际使用中的类是DefaultEventHandler，callbackHandler很少用到，感兴趣的读者自己去研究吧，这里不细讲了。另外asyncproducer中都会有一个syncProducer，用它来完成最后的发送消息工作。而sendThread的线程则负责定时定量的发送消息数据。</p>
+
+<p>AsyncProducer初始化后，会调用start方法，即启动一个线程，那么我们就来看看这个线程的run方法都做了什么。</p>
+
+<pre><code class="lang-java">public void start() {
+        sendThread.start();//ProducerSendThread
+}
+
+//ProducerSendThread的run方法
+public void run() {
+        try {
+            List&lt;QueueItem&lt;T&gt;&gt; remainingEvents = processEvents();
+            //handle remaining events
+            if (remainingEvents.size() &gt; 0) {
+                logger.debug(format("Dispatching last batch of %d events to the event handler", remainingEvents.size()));
+                tryToHandle(remainingEvents);
+            }
+        } catch (Exception e) {
+            logger.error("Error in sending events: ", e);
+        } finally {
+            shutdownLatch.countDown();
+        }
+    }
+
+private List&lt;QueueItem&lt;T&gt;&gt; processEvents() {
+        long lastSend = System.currentTimeMillis();
+        final List&lt;QueueItem&lt;T&gt;&gt; events = new ArrayList&lt;QueueItem&lt;T&gt;&gt;();
+        boolean full = false;
+        while (!shutdown) {
+            try {
+                //由消息队列中取数据
+                QueueItem&lt;T&gt; item = queue.poll(Math.max(0, (lastSend + queueTime) - System.currentTimeMillis()), TimeUnit.MILLISECONDS);
+                long elapsed =  System.currentTimeMillis()- lastSend;
+                boolean expired = item == null;
+                if (item != null) {
+                    if (callbackHandler != null) {
+                        events.addAll(callbackHandler.afterDequeuingExistingData(item));
+                    } else {
+                        events.add(item);
+                    }
+                    full = events.size() &gt;= batchSize;
+                }
+
+                //判断是否队列已满或者已经超时
+                if (full || expired) {
+                    if (logger.isDebugEnabled()) {
+                        if (expired) {
+                            logger.debug(elapsed + " ms elapsed. Queue time reached. Sending..");
+                        } else {
+                            logger.debug(format("Batch(%d) full. Sending..", batchSize));
+                        }
+                    }
+                    tryToHandle(events);
+                    lastSend = System.currentTimeMillis();
+                    events.clear();
+                }
+            } catch (InterruptedException e) {
+                logger.warn(e.getMessage(), e);
+            }
+        }
+        if (queue.size() &gt; 0) {
+            throw new IllegalQueueStateException("Invalid queue state! After queue shutdown, " + queue.size() + " remaining items in the queue");
+        }
+        if (this.callbackHandler != null) {
+            events.addAll(callbackHandler.lastBatchBeforeClose());
+        }
+        return events;
+    }
+
+</code></pre>
+
+<p>AsyncProducer的start方法中调用了sendThread的start方法，其为<code>ProducerSendThread</code>类，在该类的run方法中可以看到其主要方法为processEvents，该方法的while循环做的事情是：</p>
+
+<ul>
+<li>从消息队列(queue)中取数据，获取的方法为poll，该方法是阻塞获取值直到超时(<code>queue.time</code>)。</li>
+<li>如果获取了数据，将其加入到event列表中，并判断是否达到了配置的一次发送最大消息个数(<code>batch.size</code>)，如果两个满足其一，则调用tryToHandle方法，该方法的源码也简单，最终它调用了DefaultEventHandler类的handler方法，其中调用栏<code>syncProducer.multiSend</code>方法，将events中封装的数据发送出去，代码这里就不帖了。</li>
+</ul>
+
+<p>在上面的讲解中我们提到了一个消息队列(queue),它的作用是缓冲待发送的消息数据，其长度是由<code>queue.size</code>指定的，那么向其添加数据的代码在哪里？聪明的读者一定已经想到了send方法，这个我们本该一开始就讲的方法，其代码如下：</p>
+
+<pre><code class="lang-java"><br>public void send(String topic,T event,int partition) {
+        AsyncProducerStats.recordEvent();
+        if(closed.get()) {
+            throw new QueueClosedException("Attempt to add event to a closed queue.");
+        }
+        //简单封装下数据
+        QueueItem&lt;T&gt; data = new QueueItem&lt;T&gt;(event, partition, topic);
+        if(this.callbackHandler!=null) {
+            data = this.callbackHandler.beforeEnqueue(data);
+        }
+
+        //向队列中添加该数据
+        boolean added = false;
+        try {
+            if(enqueueTimeoutMs==0) {
+                added = queue.offer(data);
+            }else if(enqueueTimeoutMs&lt;0) {
+                    queue.put(data);
+                    added = true;
+                }else {
+                    added = queue.offer(data, enqueueTimeoutMs, TimeUnit.MILLISECONDS);
+                }
+        } catch (InterruptedException e) {
+            throw new AsyncProducerInterruptedException(e);
+        }
+        if(this.callbackHandler!=null) {
+            this.callbackHandler.afterEnqueue(data, added);
+        }
+        if(!added) {
+            AsyncProducerStats.recordDroppedEvents();
+            throw new QueueFullException("Event queue is full of unsent messages, could not send event: " + event);
+        }
+
+    }
+
+</code></pre>
+
+<p>上面这段代码的核心逻辑很简单：封装data和将data添加到queue中。不过由于queue是有大小限制的（防止数据过多，占用大量内存），所以添加的时候有一定的策略，该策略可以通过<code>queue.enqueueTimeout.ms</code>来配置，即enqueueTimeoutMs。策略如下：</p>
+
+<ul>
+<li>等于0---调用offer方法，无论是否成功，直接返回，意味着如果queue满了，消息会被舍弃，并返回false。</li>
+<li>小于0---调用put方法，阻塞直到可以成功加入queue</li>
+<li>大于0---调用offer(e,time,unit)方法，等待一段时间，超时的话返回false</li>
+</ul>
+
+<p>这下异步发送的逻辑，大家应该理清了吧，简单来讲，send向queue里面填数据，sendThread定时定量的发送数据。其简单的时序图如下：</p>
+
+<p><img src="./Jafka源码阅读之Producer - Rockybean_files/616503142.png" alt="jafka_producer_async"></p>
+
+<p>上面的图只是简单地描绘了AsyncProducer的实现原理，并不对应实际方法。另外这只是一个AsyncProducer的图形，实际运行中，一个broker对应一个AsyncProducer，每一个producer都有自己的queue和sendThread。</p>
+
+<h2>小结</h2>
+
+<p>本文主要讲解了Jafka中Producer调用send方法后的逻辑，讲解了同步和异步发送实现原理和源码，希望对大家有所帮助。</p>
+        </div>
+        <p itemprop="keywords" class="tags">标签: <a href="http://rockybean.info/tag/jafka/">jafka</a></p>
+    </article>
+
+    <div id="comments">
+        
+        <div id="respond-post-63" class="respond">
+        <div class="cancel-comment-reply">
+        <a id="cancel-comment-reply-link" href="http://rockybean.info/2012/08/14/jafka_producer_src#respond-post-63" rel="nofollow" style="display:none" onclick="return TypechoComment.cancelReply();">取消回复</a>        </div>
+    
+    	<h3 id="response">添加新评论</h3>
+    	<form method="post" action="http://rockybean.info/2012/08/14/jafka_producer_src/comment" id="comment-form" role="form">
+                		<p>
+                <label for="author" class="required">称呼</label>
+    			<input type="text" name="author" id="author" class="text" value="" required="">
+    		</p>
+    		<p>
+                <label for="mail" class="required">Email</label>
+    			<input type="email" name="mail" id="mail" class="text" value="" required="">
+    		</p>
+    		<p>
+                <label for="url">网站</label>
+    			<input type="url" name="url" id="url" class="text" placeholder="http://" value="">
+    		</p>
+                		<p>
+                <label for="textarea" class="required">内容</label>
+                <textarea rows="8" cols="50" name="text" id="textarea" class="textarea" required=""></textarea>
+            </p>
+    		<p>
+                <button type="submit" class="submit">提交评论</button>
+            </p>
+    	</form>
+    </div>
+    </div>
+
+    <ul class="post-near">
+        <li>上一篇: <a href="http://rockybean.info/2012/08/09/git_note" title="git随记">git随记</a></li>
+        <li>下一篇: <a href="http://rockybean.info/2012/08/15/jafka_consumer_src" title="Jafka源码阅读之Consumer">Jafka源码阅读之Consumer</a></li>
+    </ul>
+</div><!-- end #main-->
+
+<div class="col-mb-12 col-offset-1 col-3 kit-hidden-tb" id="secondary" role="complementary">
+        <section class="widget">
+		<h3 class="widget-title">最新文章</h3>
+        <ul class="widget-list">
+            <li><a href="http://rockybean.info/2016/12/05/180">crontab不能运行的问题</a></li><li><a href="http://rockybean.info/2016/05/24/under_gethostname">gethostname的背后机制</a></li><li><a href="http://rockybean.info/2015/04/13/ssh-login-debug-method-and-problems">ssh登录的调试方法和常见问题</a></li><li><a href="http://rockybean.info/2015/02/27/elasticsearch-date-type">Elasticsearch Date类型使用技巧</a></li><li><a href="http://rockybean.info/2015/02/25/kibana4-nginx-reverse-proxy">Kibana4使用nginx作反向代理</a></li><li><a href="http://rockybean.info/2015/02/09/elasticsearch-immense-term-exception">ElasticSearch immense term错误</a></li><li><a href="http://rockybean.info/2015/02/01/idea-integrate-xdebug">IDEA集成xdebug远程调试功能</a></li><li><a href="http://rockybean.info/2015/01/19/tar_chown_extraced_file">一次由tar解压引起的ssh登录失败事故</a></li><li><a href="http://rockybean.info/2015/01/02/pdu">名词解释之PDU</a></li><li><a href="http://rockybean.info/2014/11/29/tcp_self_connection">tcp自连接问题</a></li>        </ul>
+    </section>
+    
+        <section class="widget">
+		<h3 class="widget-title">最近回复</h3>
+        <ul class="widget-list">
+                            <li><a href="http://rockybean.info/2012/08/01/jafka-src#comment-789">xjk</a>: 顶一个</li>
+                    <li><a href="http://rockybean.info/about.html#comment-788">adfa</a>: jafka是啥，只听说过kafka</li>
+                    <li><a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver#comment-787">chinesejie</a>: 这段socketServer 代码 跟cobar 中间件的代码 ...</li>
+                    <li><a href="http://rockybean.info/2012/07/24/jafka-consumer#comment-786">chinesejie</a>: sorry 这段没错。</li>
+                    <li><a href="http://rockybean.info/2012/07/24/jafka-consumer#comment-785">chinesejie</a>: 比如1024其实的消息数据为90B，其后的消息数据为30B，这两...</li>
+                    <li><a href="http://rockybean.info/2012/07/24/jafka-consumer#comment-784">chinesejie</a>: 如果是一个broker集群，那么可能在一个broker上是tes...</li>
+                    <li><a href="http://rockybean.info/about.html#comment-783">yy</a>: 非常感谢jafka相关内容的分享！</li>
+                    <li><a href="http://rockybean.info/2015/02/27/elasticsearch-date-type#comment-781">kenshin23333</a>: 好用！感谢楼主！</li>
+                    <li><a href="http://rockybean.info/2012/08/03/jafka-message#comment-780">宋鑫</a>: 好文要顶</li>
+                    <li><a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver#comment-779">宋鑫</a>: 可以考虑同步转载到CSDN，要不好像没什么人看</li>
+                </ul>
+    </section>
+    
+        <section class="widget">
+		<h3 class="widget-title">分类</h3>
+        <ul class="widget-list"><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/default/">默认分类</a></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/tech/">技术</a><ul class="widget-list"><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/network/">网络</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/algorithm/">算法</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/devops/">运维</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/language/">语言</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/source_code/">源码解析</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/database/">数据库</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/bug/">BUG</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/tools/">七种武器</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/front_end/">前端技术</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/optimize/">优化</a></li></ul></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/book/">读书</a><ul class="widget-list"><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/tech_book/">技术这档子事</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/art_book/">文艺那档子事</a></li></ul></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/mac/">mac大法</a></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/talk/">随便扯扯</a></li></ul>	</section>
+    
+        <section class="widget">
+		<h3 class="widget-title">归档</h3>
+        <ul class="widget-list">
+            <li><a href="http://rockybean.info/2016/12/">December 2016</a></li><li><a href="http://rockybean.info/2016/05/">May 2016</a></li><li><a href="http://rockybean.info/2015/04/">April 2015</a></li><li><a href="http://rockybean.info/2015/02/">February 2015</a></li><li><a href="http://rockybean.info/2015/01/">January 2015</a></li><li><a href="http://rockybean.info/2014/11/">November 2014</a></li><li><a href="http://rockybean.info/2014/10/">October 2014</a></li><li><a href="http://rockybean.info/2014/08/">August 2014</a></li><li><a href="http://rockybean.info/2014/07/">July 2014</a></li><li><a href="http://rockybean.info/2014/04/">April 2014</a></li><li><a href="http://rockybean.info/2013/11/">November 2013</a></li><li><a href="http://rockybean.info/2012/08/">August 2012</a></li><li><a href="http://rockybean.info/2012/07/">July 2012</a></li>        </ul>
+	</section>
+    
+    	<section class="widget">
+		<h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+                            <li class="last"><a href="http://rockybean.info/admin/login.php">登录</a></li>
+                        <li><a href="http://rockybean.info/feed/">文章 RSS</a></li>
+            <li><a href="http://rockybean.info/feed/comments/">评论 RSS</a></li>
+            <li><a href="http://www.typecho.org/">Typecho</a></li>
+        </ul>
+	</section>
+    <section class="widget">
+	<ul class="widet-list" style="margin-left:99999px;">
+<li><a href="http://www.cdliqing.com/">创大沥青</a></li>
+</ul>
+</section>
+
+</div><!-- end #sidebar -->
+
+        </div><!-- end .row -->
+    </div>
+</div><!-- end #body -->
+
+<footer id="footer" role="contentinfo">
+    © 2017 <a href="http://rockybean.info/">Rockybean</a>.
+    由 <a href="http://www.typecho.org/">Typecho</a> 强力驱动.
+</footer><!-- end #footer -->
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F910e4fd2443eac0ca71a16d63ba69db5' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="./Jafka源码阅读之Producer - Rockybean_files/h.js.下载" type="text/javascript"></script><a href="http://tongji.baidu.com/hm-web/welcome/ico?s=910e4fd2443eac0ca71a16d63ba69db5" target="_blank"><img border="0" src="./Jafka源码阅读之Producer - Rockybean_files/21.gif" width="20" height="20"></a>
+
+
+
+
+</body></html>

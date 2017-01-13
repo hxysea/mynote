@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<!-- saved from url=(0042)http://rockybean.info/2012/08/01/jafka-src -->
+<html class="no-js"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Jafka Broker代码阅读之总览 - Rockybean</title>
+
+    <!-- 使用url函数转换相关路径 -->
+    <link rel="stylesheet" href="./Jafka Broker代码阅读之总览 - Rockybean_files/normalize.min.css">
+    <link rel="stylesheet" href="./Jafka Broker代码阅读之总览 - Rockybean_files/grid.css">
+    <link rel="stylesheet" href="./Jafka Broker代码阅读之总览 - Rockybean_files/style.css">
+
+    <!--[if lt IE 9]>
+    <script src="//cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="//cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- 通过自有函数输出HTML头部信息 -->
+    <meta name="description" content="从本文开始，笔者将尝试从源码角度解读Jafka(Kafka)的特性，探究其背后的实现原理与技术。前面讲解Jafka Broker的文章中有提到下面这段启动服务端的代码，我们就从这里开始。">
+<meta name="keywords" content="jafka">
+<meta name="generator" content="Typecho 1.0/14.10.10">
+<meta name="template" content="default">
+<link rel="pingback" href="http://rockybean.info/action/xmlrpc">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://rockybean.info/action/xmlrpc?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://rockybean.info/action/xmlrpc?wlw">
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://rockybean.info/feed/2012/08/01/jafka-src">
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="http://rockybean.info/feed/rss/2012/08/01/jafka-src">
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="http://rockybean.info/feed/atom/2012/08/01/jafka-src">
+<script type="text/javascript">
+(function () {
+    window.TypechoComment = {
+        dom : function (id) {
+            return document.getElementById(id);
+        },
+    
+        create : function (tag, attr) {
+            var el = document.createElement(tag);
+        
+            for (var key in attr) {
+                el.setAttribute(key, attr[key]);
+            }
+        
+            return el;
+        },
+
+        reply : function (cid, coid) {
+            var comment = this.dom(cid), parent = comment.parentNode,
+                response = this.dom('respond-post-76'), input = this.dom('comment-parent'),
+                form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+                textarea = response.getElementsByTagName('textarea')[0];
+
+            if (null == input) {
+                input = this.create('input', {
+                    'type' : 'hidden',
+                    'name' : 'parent',
+                    'id'   : 'comment-parent'
+                });
+
+                form.appendChild(input);
+            }
+
+            input.setAttribute('value', coid);
+
+            if (null == this.dom('comment-form-place-holder')) {
+                var holder = this.create('div', {
+                    'id' : 'comment-form-place-holder'
+                });
+
+                response.parentNode.insertBefore(holder, response);
+            }
+
+            comment.appendChild(response);
+            this.dom('cancel-comment-reply-link').style.display = '';
+
+            if (null != textarea && 'text' == textarea.name) {
+                textarea.focus();
+            }
+
+            return false;
+        },
+
+        cancelReply : function () {
+            var response = this.dom('respond-post-76'),
+            holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+            if (null != input) {
+                input.parentNode.removeChild(input);
+            }
+
+            if (null == holder) {
+                return true;
+            }
+
+            this.dom('cancel-comment-reply-link').style.display = 'none';
+            holder.parentNode.insertBefore(response, holder);
+            return false;
+        }
+    };
+})();
+</script>
+<script type="text/javascript">
+(function () {
+    var event = document.addEventListener ? {
+        add: 'addEventListener',
+        focus: 'focus',
+        load: 'DOMContentLoaded'
+    } : {
+        add: 'attachEvent',
+        focus: 'onfocus',
+        load: 'onload'
+    };
+
+    document[event.add](event.load, function () {
+        var r = document.getElementById('respond-post-76');
+
+        if (null != r) {
+            var forms = r.getElementsByTagName('form');
+            if (forms.length > 0) {
+                var f = forms[0], textarea = f.getElementsByTagName('textarea')[0], added = false;
+
+                if (null != textarea && 'text' == textarea.name) {
+                    textarea[event.add](event.focus, function () {
+                        if (!added) {
+                            var input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = '_';
+                            input.value = (function () {
+    var _Ytr1yv = //'Ll9'
+'943'+'3'//'GN7'
++'f9'//'dYX'
++'3'//'X'
++//'P'
+'P'+'e6'//'QkM'
++'39a'//'zFo'
++'wfG'//'wfG'
++'2'//'GNm'
++//'EB'
+'e36'+/* 'P'//'P' */''+'e'//'8'
++//'u4'
+'34'+/* 'L'//'L' */''+'fb9'//'r'
++//'KD'
+'e2'+//'Xf7'
+'Xf7'+//'3h0'
+'3h0'+//'h'
+'h'+'71'//'8'
++''///*'V'*/'V'
++'7'//'LB'
++'0'//'p3'
++//'lG'
+'4'+//'Q'
+'8d'+/* 'G'//'G' */''+'wU'//'wU'
++//'Lf'
+'Lf'+''///*'jy'*/'jy'
++''///*'d'*/'d'
++'L'//'L'
++''///*'EN'*/'EN'
++''///*'f'*/'f'
++'8'//'0LA'
+, _eGMQ = [[7,8],[12,15],[24,27],[24,27],[24,25],[31,33],[31,33],[31,32]];
+    
+    for (var i = 0; i < _eGMQ.length; i ++) {
+        _Ytr1yv = _Ytr1yv.substring(0, _eGMQ[i][0]) + _Ytr1yv.substring(_eGMQ[i][1]);
+    }
+
+    return _Ytr1yv;
+})();
+
+                            f.appendChild(input);
+                            added = true;
+                        }
+                    });
+                }
+            }
+        }
+    });
+})();
+</script></head>
+<body>
+<!--[if lt IE 8]>
+    <div class="browsehappy" role="dialog">当前网页 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的访问, 请 <a href="http://browsehappy.com/">升级你的浏览器</a>.</div>
+<![endif]-->
+
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="row">
+            <div class="site-name col-mb-12 col-9">
+                <a id="logo" href="http://rockybean.info/">
+                                        Rockybean                </a>
+        	    <p class="description">Just Be Cool!!! 继往者，启来者，不过是个烂笔头！</p>
+            </div>
+            <div class="site-search col-3 kit-hidden-tb">
+                <form id="search" method="post" action="http://rockybean.info/2012/08/01/" role="search">
+                    <label for="s" class="sr-only">搜索关键字</label>
+                    <input type="text" name="s" class="text" placeholder="输入关键字搜索">
+                    <button type="submit" class="submit">搜索</button>
+                </form>
+            </div>
+            <div class="col-mb-12">
+                <nav id="nav-menu" class="clearfix" role="navigation">
+                    <a href="http://rockybean.info/">首页</a>
+                                                            <a href="http://rockybean.info/about.html" title="关于">关于</a>
+                                    </nav>
+            </div>
+        </div><!-- end .row -->
+    </div>
+</header><!-- end #header -->
+<div id="body">
+    <div class="container">
+        <div class="row">
+
+    
+    
+
+<div class="col-mb-12 col-8" id="main" role="main">
+    <article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <h1 class="post-title" itemprop="name headline"><a itemtype="url" href="http://rockybean.info/2012/08/01/jafka-src">Jafka Broker代码阅读之总览</a></h1>
+        <ul class="post-meta">
+            <li itemprop="author" itemscope="" itemtype="http://schema.org/Person">作者: <a itemprop="name" href="http://rockybean.info/author/1/" rel="author">rockybean</a></li>
+            <li>时间: <time datetime="2012-08-01T08:24:00+08:00" itemprop="datePublished">August 1, 2012</time></li>
+            <li>分类: <a href="http://rockybean.info/category/source_code/">源码解析</a></li>
+        </ul>
+        <div class="post-content" itemprop="articleBody">
+            <p>从本文开始，笔者将尝试从源码角度解读Jafka(Kafka)的特性，探究其背后的实现原理与技术。前面讲解Jafka Broker的<a href="http://rockybean.info/2012/07/26/jafka-broker/">文章</a>中有提到下面这段启动服务端的代码，我们就从这里开始。</p>
+
+<!--more-->
+
+<pre><code class="lang-java"><br>Properties props = new Properties();
+props.setProperty("port","9093");
+props.setProperty("log.dir","/home/alfred/jafkaDataDirs/data1");
+Jafka broker = new Jafka();
+broker.start(props,null,null);
+broker.awaitShutdown();
+</code></pre>
+
+<p>上面代码演示了Jafka一个broker的启动，其顺序图如下所示：</p>
+
+<p><img src="./Jafka Broker代码阅读之总览 - Rockybean_files/3396445963.png" alt="jafka-sq"></p>
+
+<p>上图呈现了Jafka Broker启动过程中主要涉及的类和调用方法，可以看到主要的代码集中在Server类的startup方法，其代码如下：</p>
+
+<pre><code class="lang-java"><br>public void startup() {
+        try {
+            logger.info("Starting Jafka server "+serverInfo.getVersion());
+            Utils.registerMBean(serverInfo);
+            //检查上次服务端是否正常关闭，如果不是，要校验jafka文件，取出损坏的消息
+            boolean needRecovery = true;
+            File cleanShutDownFile = new File(new File(config.getLogDir()), CLEAN_SHUTDOWN_FILE);
+            if (cleanShutDownFile.exists()) {
+                needRecovery = false;
+                cleanShutDownFile.delete();
+            }
+            //初始化消息数据管理类LogManager，并将所有的消息数据按照一定格式读入内存（非数据内容本身）
+            this.logManager = new LogManager(config,//
+                    scheduler,//
+                    1000L * 60 * config.getLogCleanupIntervalMinutes(),//
+                    1000L * 60 * 60 * config.getLogRetentionHours(),//
+                    needRecovery);
+            this.logManager.setRollingStategy(config.getRollingStrategy());
+            logManager.load();
+
+            //producer和consumer请求处理类，如写消息、抓取消息等
+            RequestHandlers handlers = new RequestHandlers(logManager);
+            //启动socket server端，处理producer和consumer的请求
+            socketServer = new SocketServer(handlers, config);
+            Utils.registerMBean(socketServer.getStats());
+            socketServer.startup();
+            Mx4jLoader.maybeLoad();
+            //如果开启了zookeeper连接，则将该broker信息注册到zookeeper中，并开启定时flush消息数据的线程
+            logManager.startup();
+            logger.info("Server started.");
+        } catch (Exception ex) {
+            logger.fatal("Fatal error during startup.", ex);
+            close();
+        } finally {
+            serverInfo.started();
+        }
+    }
+</code></pre>
+
+<p>对于上述代码的意义，可参见注释，另外作以下几点说明：</p>
+
+<ul>
+<li><p>Jafka broker在正常关闭的时候会在数据文件夹下生成一个.jafka_cleanshutdown的文件,broker 在启动时可以通过检查该文件是否存在来判定上一次broker是否为正常关闭，如果不是正常关闭，那么jafka在打开每个topic-partition文件夹下最后一个jafka文件时会去校验其消息数据（即jafka文件），如果发现其上某条消息的实际长度不等于消息头中指定的长度，说明该消息有问题，则删除它及其以后的消息数据。具体实现后续会有源码分析。</p></li>
+<li><p>LogManager是消息数据的管理类，负责消息的读写。其中load方法是将该broker数据文件夹下的所有消息数据以一定形式读入内存，以便读写。</p></li>
+<li><p>SocketServer利用java的nio实现了一个高性能的socket服务器，来处理producer consumer的请求。</p></li>
+</ul>
+
+<p>Jafka Broker的代码中最主要的两个类便是LogManager和SocketServer，后续文章也会从这两方面展开源码讲解。下面还是先看下Jafka源码结构</p>
+
+<pre><code>src
+├── main
+│     ├── assembly #maven assembly插件配置文件
+│     ├── java
+│     │     └── com
+│     │         └── sohu
+│     │             └── jafka
+│     │                 ├── admin #bin/admin-console.sh实现类
+│     │                 ├── api #request reponse的构建类，封装producer consumer的请求及返回
+│     │                 ├── cluster #搭建集群用到的一些类
+│     │                 ├── common #异常类和注解类
+│     │                 ├── console #bin/producer/consumer-console.sh的实现类
+│     │                 ├── consumer #consumer实现类
+│     │                 ├── log #消息数据管理的相关类
+│     │                 ├── message #消息数据的相关类，如格式定义、Message和offset的封装等
+│     │                 ├── mx #jmx的相关类，用于监控broker运行状况和管理broker
+│     │                 ├── network #socket服务器实现类
+│     │                 ├── producer #producer实现类
+│     │                 ├── server #broker的实现类，主要负责各类配置文件的封装，调用network和log下的SocketServer和LogManager启动服务端
+│     │                 └── utils #实用类封装
+│     └── resources
+└── test
+    ├── java #测试方法，可以以此为入口学习jafka的使用和源码阅读
+    │     └── com
+    │         └── sohu
+    │             └── jafka
+    │                 ├── admin
+    │                 ├── api
+    │                 ├── cluster
+    │                 ├── common
+    │                 ├── consumer
+    │                 ├── log
+    │                 ├── message
+    │                 ├── producer
+    │                 ├── server
+    │                 └── utils
+    └── resources
+</code></pre>
+
+<h2>小结</h2>
+
+<p>与Jafka broker相关的源码文件夹主要有server network log三个文件夹，大家在阅读源码的时候可以先从相关的单元测试文件下手，这样不至于陷于源码的茫茫森林里迷失方向。对于broker这一块，笔者后续会从Socket服务器和LogManager消息数据管理这两个方面展开来讲解。Jafka的源码实现清晰明了，非常值得学习，欢迎感兴趣的读者可以阅读并与笔者交流感悟。</p>
+        </div>
+        <p itemprop="keywords" class="tags">标签: <a href="http://rockybean.info/tag/jafka/">jafka</a></p>
+    </article>
+
+    <div id="comments">
+        	<h3>已有 2 条评论</h3>
+    
+    <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-775" class="comment-body comment-parent comment-odd">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./Jafka Broker代码阅读之总览 - Rockybean_files/61e489ce669e3311b60eccf326172ae6" alt="宋鑫" width="32" height="32"></span>
+        <cite class="fn" itemprop="name">宋鑫</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://rockybean.info/2012/08/01/jafka-src#comment-775"><time itemprop="commentTime" datetime="2015-06-30T15:50:57+08:00">June 30th, 2015 at 03:50 pm</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>哎，楼主怎么多写的好文章貌似没什么人看。一方面搞这些消息队列的人少，拿来就用，二来楼主感觉需要搞个jafka的标签什么的，百度不到你的文章。我是openchina链接过来的。</p><p>jafka搞明白了，kafka也很容易，本来就是kafka的java克隆版，我最近也在学习scala.<br>
+队列这块主要是持久化的效率，消息不丢失，不重复消费，还有分布式。</p>    </div>
+    <div class="comment-reply">
+        <a href="http://rockybean.info/2012/08/01/jafka-src?replyTo=775#respond-post-76" rel="nofollow" onclick="return TypechoComment.reply(&#39;comment-775&#39;, 775);">回复</a>    </div>
+    </li>
+<li itemscope="" itemtype="http://schema.org/UserComments" id="comment-789" class="comment-body comment-parent comment-even">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./Jafka Broker代码阅读之总览 - Rockybean_files/85d3910855e8e7dc07c62e1807f6a226" alt="xjk" width="32" height="32"></span>
+        <cite class="fn" itemprop="name"><a href="http://www.tuomatuo.com/" rel="external nofollow">xjk</a></cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://rockybean.info/2012/08/01/jafka-src#comment-789"><time itemprop="commentTime" datetime="2016-10-19T15:54:33+08:00">October 19th, 2016 at 03:54 pm</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>顶一个</p>    </div>
+    <div class="comment-reply">
+        <a href="http://rockybean.info/2012/08/01/jafka-src?replyTo=789#respond-post-76" rel="nofollow" onclick="return TypechoComment.reply(&#39;comment-789&#39;, 789);">回复</a>    </div>
+    </li>
+</ol>
+        
+    
+        <div id="respond-post-76" class="respond">
+        <div class="cancel-comment-reply">
+        <a id="cancel-comment-reply-link" href="http://rockybean.info/2012/08/01/jafka-src#respond-post-76" rel="nofollow" style="display:none" onclick="return TypechoComment.cancelReply();">取消回复</a>        </div>
+    
+    	<h3 id="response">添加新评论</h3>
+    	<form method="post" action="http://rockybean.info/2012/08/01/jafka-src/comment" id="comment-form" role="form">
+                		<p>
+                <label for="author" class="required">称呼</label>
+    			<input type="text" name="author" id="author" class="text" value="" required="">
+    		</p>
+    		<p>
+                <label for="mail" class="required">Email</label>
+    			<input type="email" name="mail" id="mail" class="text" value="" required="">
+    		</p>
+    		<p>
+                <label for="url">网站</label>
+    			<input type="url" name="url" id="url" class="text" placeholder="http://" value="">
+    		</p>
+                		<p>
+                <label for="textarea" class="required">内容</label>
+                <textarea rows="8" cols="50" name="text" id="textarea" class="textarea" required=""></textarea>
+            </p>
+    		<p>
+                <button type="submit" class="submit">提交评论</button>
+            </p>
+    	</form>
+    </div>
+    </div>
+
+    <ul class="post-near">
+        <li>上一篇: <a href="http://rockybean.info/2012/07/30/jafka-design" title="Kafka设计理念浅析">Kafka设计理念浅析</a></li>
+        <li>下一篇: <a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver" title="Jafka Broker源码阅读之SocketServer解析">Jafka Broker源码阅读之SocketServer解析</a></li>
+    </ul>
+</div><!-- end #main-->
+
+<div class="col-mb-12 col-offset-1 col-3 kit-hidden-tb" id="secondary" role="complementary">
+        <section class="widget">
+		<h3 class="widget-title">最新文章</h3>
+        <ul class="widget-list">
+            <li><a href="http://rockybean.info/2016/12/05/180">crontab不能运行的问题</a></li><li><a href="http://rockybean.info/2016/05/24/under_gethostname">gethostname的背后机制</a></li><li><a href="http://rockybean.info/2015/04/13/ssh-login-debug-method-and-problems">ssh登录的调试方法和常见问题</a></li><li><a href="http://rockybean.info/2015/02/27/elasticsearch-date-type">Elasticsearch Date类型使用技巧</a></li><li><a href="http://rockybean.info/2015/02/25/kibana4-nginx-reverse-proxy">Kibana4使用nginx作反向代理</a></li><li><a href="http://rockybean.info/2015/02/09/elasticsearch-immense-term-exception">ElasticSearch immense term错误</a></li><li><a href="http://rockybean.info/2015/02/01/idea-integrate-xdebug">IDEA集成xdebug远程调试功能</a></li><li><a href="http://rockybean.info/2015/01/19/tar_chown_extraced_file">一次由tar解压引起的ssh登录失败事故</a></li><li><a href="http://rockybean.info/2015/01/02/pdu">名词解释之PDU</a></li><li><a href="http://rockybean.info/2014/11/29/tcp_self_connection">tcp自连接问题</a></li>        </ul>
+    </section>
+    
+        <section class="widget">
+		<h3 class="widget-title">最近回复</h3>
+        <ul class="widget-list">
+                            <li><a href="http://rockybean.info/2012/08/01/jafka-src#comment-789">xjk</a>: 顶一个</li>
+                    <li><a href="http://rockybean.info/about.html#comment-788">adfa</a>: jafka是啥，只听说过kafka</li>
+                    <li><a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver#comment-787">chinesejie</a>: 这段socketServer 代码 跟cobar 中间件的代码 ...</li>
+                    <li><a href="http://rockybean.info/2012/07/24/jafka-consumer#comment-786">chinesejie</a>: sorry 这段没错。</li>
+                    <li><a href="http://rockybean.info/2012/07/24/jafka-consumer#comment-785">chinesejie</a>: 比如1024其实的消息数据为90B，其后的消息数据为30B，这两...</li>
+                    <li><a href="http://rockybean.info/2012/07/24/jafka-consumer#comment-784">chinesejie</a>: 如果是一个broker集群，那么可能在一个broker上是tes...</li>
+                    <li><a href="http://rockybean.info/about.html#comment-783">yy</a>: 非常感谢jafka相关内容的分享！</li>
+                    <li><a href="http://rockybean.info/2015/02/27/elasticsearch-date-type#comment-781">kenshin23333</a>: 好用！感谢楼主！</li>
+                    <li><a href="http://rockybean.info/2012/08/03/jafka-message#comment-780">宋鑫</a>: 好文要顶</li>
+                    <li><a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver#comment-779">宋鑫</a>: 可以考虑同步转载到CSDN，要不好像没什么人看</li>
+                </ul>
+    </section>
+    
+        <section class="widget">
+		<h3 class="widget-title">分类</h3>
+        <ul class="widget-list"><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/default/">默认分类</a></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/tech/">技术</a><ul class="widget-list"><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/network/">网络</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/algorithm/">算法</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/devops/">运维</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/language/">语言</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/source_code/">源码解析</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/database/">数据库</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/bug/">BUG</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/tools/">七种武器</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/front_end/">前端技术</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/optimize/">优化</a></li></ul></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/book/">读书</a><ul class="widget-list"><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/tech_book/">技术这档子事</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/art_book/">文艺那档子事</a></li></ul></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/mac/">mac大法</a></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/talk/">随便扯扯</a></li></ul>	</section>
+    
+        <section class="widget">
+		<h3 class="widget-title">归档</h3>
+        <ul class="widget-list">
+            <li><a href="http://rockybean.info/2016/12/">December 2016</a></li><li><a href="http://rockybean.info/2016/05/">May 2016</a></li><li><a href="http://rockybean.info/2015/04/">April 2015</a></li><li><a href="http://rockybean.info/2015/02/">February 2015</a></li><li><a href="http://rockybean.info/2015/01/">January 2015</a></li><li><a href="http://rockybean.info/2014/11/">November 2014</a></li><li><a href="http://rockybean.info/2014/10/">October 2014</a></li><li><a href="http://rockybean.info/2014/08/">August 2014</a></li><li><a href="http://rockybean.info/2014/07/">July 2014</a></li><li><a href="http://rockybean.info/2014/04/">April 2014</a></li><li><a href="http://rockybean.info/2013/11/">November 2013</a></li><li><a href="http://rockybean.info/2012/08/">August 2012</a></li><li><a href="http://rockybean.info/2012/07/">July 2012</a></li>        </ul>
+	</section>
+    
+    	<section class="widget">
+		<h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+                            <li class="last"><a href="http://rockybean.info/admin/login.php">登录</a></li>
+                        <li><a href="http://rockybean.info/feed/">文章 RSS</a></li>
+            <li><a href="http://rockybean.info/feed/comments/">评论 RSS</a></li>
+            <li><a href="http://www.typecho.org/">Typecho</a></li>
+        </ul>
+	</section>
+    <section class="widget">
+	<ul class="widet-list" style="margin-left:99999px;">
+<li><a href="http://www.cdliqing.com/">创大沥青</a></li>
+</ul>
+</section>
+
+</div><!-- end #sidebar -->
+
+        </div><!-- end .row -->
+    </div>
+</div><!-- end #body -->
+
+<footer id="footer" role="contentinfo">
+    © 2017 <a href="http://rockybean.info/">Rockybean</a>.
+    由 <a href="http://www.typecho.org/">Typecho</a> 强力驱动.
+</footer><!-- end #footer -->
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F910e4fd2443eac0ca71a16d63ba69db5' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="./Jafka Broker代码阅读之总览 - Rockybean_files/h.js.下载" type="text/javascript"></script><a href="http://tongji.baidu.com/hm-web/welcome/ico?s=910e4fd2443eac0ca71a16d63ba69db5" target="_blank"><img border="0" src="./Jafka Broker代码阅读之总览 - Rockybean_files/21.gif" width="20" height="20"></a>
+
+
+
+
+</body></html>

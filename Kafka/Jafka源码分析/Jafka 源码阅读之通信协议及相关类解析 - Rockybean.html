@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<!-- saved from url=(0046)http://rockybean.info/2012/08/03/jafka-message -->
+<html class="no-js"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Jafka 源码阅读之通信协议及相关类解析 - Rockybean</title>
+
+    <!-- 使用url函数转换相关路径 -->
+    <link rel="stylesheet" href="./Jafka 源码阅读之通信协议及相关类解析 - Rockybean_files/normalize.min.css">
+    <link rel="stylesheet" href="./Jafka 源码阅读之通信协议及相关类解析 - Rockybean_files/grid.css">
+    <link rel="stylesheet" href="./Jafka 源码阅读之通信协议及相关类解析 - Rockybean_files/style.css">
+
+    <!--[if lt IE 9]>
+    <script src="//cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="//cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- 通过自有函数输出HTML头部信息 -->
+    <meta name="description" content="本文讲解Jafka的通信协议，其实就是传输数据的约定格式。">
+<meta name="keywords" content="jafka">
+<meta name="generator" content="Typecho 1.0/14.10.10">
+<meta name="template" content="default">
+<link rel="pingback" href="http://rockybean.info/action/xmlrpc">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://rockybean.info/action/xmlrpc?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://rockybean.info/action/xmlrpc?wlw">
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://rockybean.info/feed/2012/08/03/jafka-message">
+<link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="http://rockybean.info/feed/rss/2012/08/03/jafka-message">
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="http://rockybean.info/feed/atom/2012/08/03/jafka-message">
+<script type="text/javascript">
+(function () {
+    window.TypechoComment = {
+        dom : function (id) {
+            return document.getElementById(id);
+        },
+    
+        create : function (tag, attr) {
+            var el = document.createElement(tag);
+        
+            for (var key in attr) {
+                el.setAttribute(key, attr[key]);
+            }
+        
+            return el;
+        },
+
+        reply : function (cid, coid) {
+            var comment = this.dom(cid), parent = comment.parentNode,
+                response = this.dom('respond-post-70'), input = this.dom('comment-parent'),
+                form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+                textarea = response.getElementsByTagName('textarea')[0];
+
+            if (null == input) {
+                input = this.create('input', {
+                    'type' : 'hidden',
+                    'name' : 'parent',
+                    'id'   : 'comment-parent'
+                });
+
+                form.appendChild(input);
+            }
+
+            input.setAttribute('value', coid);
+
+            if (null == this.dom('comment-form-place-holder')) {
+                var holder = this.create('div', {
+                    'id' : 'comment-form-place-holder'
+                });
+
+                response.parentNode.insertBefore(holder, response);
+            }
+
+            comment.appendChild(response);
+            this.dom('cancel-comment-reply-link').style.display = '';
+
+            if (null != textarea && 'text' == textarea.name) {
+                textarea.focus();
+            }
+
+            return false;
+        },
+
+        cancelReply : function () {
+            var response = this.dom('respond-post-70'),
+            holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+            if (null != input) {
+                input.parentNode.removeChild(input);
+            }
+
+            if (null == holder) {
+                return true;
+            }
+
+            this.dom('cancel-comment-reply-link').style.display = 'none';
+            holder.parentNode.insertBefore(response, holder);
+            return false;
+        }
+    };
+})();
+</script>
+<script type="text/javascript">
+(function () {
+    var event = document.addEventListener ? {
+        add: 'addEventListener',
+        focus: 'focus',
+        load: 'DOMContentLoaded'
+    } : {
+        add: 'attachEvent',
+        focus: 'onfocus',
+        load: 'onload'
+    };
+
+    document[event.add](event.load, function () {
+        var r = document.getElementById('respond-post-70');
+
+        if (null != r) {
+            var forms = r.getElementsByTagName('form');
+            if (forms.length > 0) {
+                var f = forms[0], textarea = f.getElementsByTagName('textarea')[0], added = false;
+
+                if (null != textarea && 'text' == textarea.name) {
+                    textarea[event.add](event.focus, function () {
+                        if (!added) {
+                            var input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = '_';
+                            input.value = (function () {
+    var _nmoCI = '7d'//'VT'
++//'P8'
+'d'+'e1'//'P'
++//'Sq8'
+'89'+'55f'//'G6'
++//'4'
+'ae'+'bc9'//'stI'
++'a8'//'QuW'
++//'4oH'
+'d61'+'089'//'LCJ'
++//'uS'
+'0ec'+/* 'Qb'//'Qb' */''+//'Pyw'
+'f8'+/* '0a'//'0a' */''+'6e'//'b'
++'19'//'63'
+, _Em5e1LD = [];
+    
+    for (var i = 0; i < _Em5e1LD.length; i ++) {
+        _nmoCI = _nmoCI.substring(0, _Em5e1LD[i][0]) + _nmoCI.substring(_Em5e1LD[i][1]);
+    }
+
+    return _nmoCI;
+})();
+
+                            f.appendChild(input);
+                            added = true;
+                        }
+                    });
+                }
+            }
+        }
+    });
+})();
+</script></head>
+<body>
+<!--[if lt IE 8]>
+    <div class="browsehappy" role="dialog">当前网页 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的访问, 请 <a href="http://browsehappy.com/">升级你的浏览器</a>.</div>
+<![endif]-->
+
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="row">
+            <div class="site-name col-mb-12 col-9">
+                <a id="logo" href="http://rockybean.info/">
+                                        Rockybean                </a>
+        	    <p class="description">Just Be Cool!!! 继往者，启来者，不过是个烂笔头！</p>
+            </div>
+            <div class="site-search col-3 kit-hidden-tb">
+                <form id="search" method="post" action="http://rockybean.info/2012/08/03/" role="search">
+                    <label for="s" class="sr-only">搜索关键字</label>
+                    <input type="text" name="s" class="text" placeholder="输入关键字搜索">
+                    <button type="submit" class="submit">搜索</button>
+                </form>
+            </div>
+            <div class="col-mb-12">
+                <nav id="nav-menu" class="clearfix" role="navigation">
+                    <a href="http://rockybean.info/">首页</a>
+                                                            <a href="http://rockybean.info/about.html" title="关于">关于</a>
+                                    </nav>
+            </div>
+        </div><!-- end .row -->
+    </div>
+</header><!-- end #header -->
+<div id="body">
+    <div class="container">
+        <div class="row">
+
+    
+    
+
+<div class="col-mb-12 col-8" id="main" role="main">
+    <article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <h1 class="post-title" itemprop="name headline"><a itemtype="url" href="http://rockybean.info/2012/08/03/jafka-message">Jafka 源码阅读之通信协议及相关类解析</a></h1>
+        <ul class="post-meta">
+            <li itemprop="author" itemscope="" itemtype="http://schema.org/Person">作者: <a itemprop="name" href="http://rockybean.info/author/1/" rel="author">rockybean</a></li>
+            <li>时间: <time datetime="2012-08-03T08:07:00+08:00" itemprop="datePublished">August 3, 2012</time></li>
+            <li>分类: <a href="http://rockybean.info/category/source_code/">源码解析</a></li>
+        </ul>
+        <div class="post-content" itemprop="articleBody">
+            <p>本文讲解Jafka的通信协议，其实就是传输数据的约定格式。</p>
+
+<!--more-->
+
+<p>Jafka的通信发生在producer和broker、consumer和broker之间，目前producer和broker之间通信是单向的(producer-&gt;broker),consumer和broker之间通信是双向的(consumer&lt;-&gt;broker)。主要涉及到的类有Message MessageSet Request Send Receive，下面分别介绍这些类。</p>
+
+<h2>Message(com.sohu.jafka.message)</h2>
+
+<p>Message类是具体的消息数据，在传递的过程中，其字节序列的组成及含义如下:</p>
+
+<p>|字节大小(Byte)|含义|<br>
+|:-------:|:-------:|<br>
+|4|length,该条消息总长度|<br>
+|1|version(magic byte),消息版本，适应后面更改通信协议，目前只有一种协议|<br>
+|1|attribute,目前主要用于指明压缩算法：0--NoCompression 1--GzipCompression|<br>
+|4|crc32，消息完整性校验|<br>
+|x|实际数据，x=length-1-1-4|<br>
+{: class="table table-striped table-bordered"}</p>
+
+<p>Message类即对这个字节序列作了封装，其主要的属性和方法如下：</p>
+
+<pre><code class="lang-java"><br>//消息总长度length
+private final int messageSize;
+public int getSizeInBytes() {
+        return messageSize;
+}
+
+
+//存储字节序列length之后的数据
+final ByteBuffer buffer;
+
+//自定义version类型，目前只有这一个
+private static final byte MAGIC_VERSION2 = 1;
+//当前version值
+public static final byte CurrentMagicValue = 1;
+//version值的偏移和长度
+public static final byte MAGIC_OFFSET = 0;
+public static final byte MAGIC_LENGTH = 1;
+public byte magic() {
+        return buffer.get(MAGIC_OFFSET);
+}
+
+
+//属性值的偏移和长度
+public static final byte ATTRIBUTE_OFFSET = MAGIC_OFFSET + MAGIC_LENGTH;
+public static final byte ATTRIBUT_ELENGTH = 1;
+public byte attributes() {
+        return buffer.get(ATTRIBUTE_OFFSET);
+}
+
+
+//属性中只用最后两位指明压缩算法
+public static final int CompressionCodeMask = 0x03; //
+//0表明不使用压缩算法
+public static final int NoCompression = 0;
+
+//crc长度
+public static final byte CrcLength = 4;
+
+//计算crc的偏移
+public static int crcOffset(byte magic) {
+        switch (magic) {
+            case MAGIC_VERSION2:
+                return ATTRIBUTE_OFFSET + ATTRIBUT_ELENGTH;
+        }
+        throw new UnknownMagicByteException(format("Magic byte value of %d is unknown", magic));
+    }
+
+
+//消息数据的偏移
+public static int payloadOffset(byte magic) {
+        return crcOffset(magic) + CrcLength;
+}
+//获取实际的消息数据
+public ByteBuffer payload() {
+        ByteBuffer payload = buffer.duplicate();
+        payload.position(headerSize(magic()));
+        payload = payload.slice();
+        payload.limit(payloadSize());
+        payload.rewind();
+        return payload;
+    }
+
+</code></pre>
+
+<p>从上面的注释中我们可以看到，Message类就是对定义的字节序列格式进行了一个封装，对外提供了方便的调用函数，其主要的一个构造函数如下：</p>
+
+<pre><code class="lang-java"><br>//这里的bytes为实际的消息数据，该构造函数会根据传入的参数，自动生成消息的header数据
+public Message(long checksum, byte[] bytes, CompressionCodec compressionCodec) {
+    //初始化buffer的大小=headerSize+messageLength
+        this(ByteBuffer.allocate(Message.headerSize(Message.CurrentMagicValue) + bytes.length));
+        //存储version,1Byte
+        buffer.put(CurrentMagicValue);
+        byte attributes = 0;
+        if (compressionCodec.codec &gt; 0) {
+            attributes = (byte) (attributes | (CompressionCodeMask &amp; compressionCodec.codec));
+        }
+        //存储attribute，1Byte
+        buffer.put(attributes);
+        //存储crc32
+        Utils.putUnsignedInt(buffer, checksum);
+        //存储消息数据
+        buffer.put(bytes);
+        //定位buffer到头部，以备buffer被读取使用
+        buffer.rewind();
+    }
+
+</code></pre>
+
+<h2>MessageSet(com.sohu.jafka.message)</h2>
+
+<p>从MessageSet的类名中，大家也可以猜到这个类是多个Message的集合，它有两个子类：ByteBufferMessageSet和FileMessageSet，前者供producer和consumer使用，后者供broker使用。首先我们来看下MessageSet的源码。</p>
+
+<pre><code class="lang-java"><br>public abstract class MessageSet implements Iterable&lt;MessageAndOffset&gt; {
+
+    public static final MessageSet Empty = new ByteBufferMessageSet(ByteBuffer.allocate(0));
+    //代表消息长度占用字节数：4个
+    public static final int LogOverhead = 4;
+
+    //将多条message封装到一个ByteBuffer中
+    public static ByteBuffer createByteBuffer(CompressionCodec compressionCodec, Message... messages) {
+        if (compressionCodec == CompressionCodec.NoCompressionCodec) {
+            ByteBuffer buffer = ByteBuffer.allocate(messageSetSize(messages));
+            for (Message message : messages) {
+                message.serializeTo(buffer);
+            }
+            buffer.rewind();
+            return buffer;
+        }
+        //
+        if (messages.length == 0) {
+            ByteBuffer buffer = ByteBuffer.allocate(messageSetSize(messages));
+            buffer.rewind();
+            return buffer;
+        }
+        //
+        Message message = CompressionUtils.compress(messages, compressionCodec);
+        ByteBuffer buffer = ByteBuffer.allocate(message.serializedSize());
+        message.serializeTo(buffer);
+        buffer.rewind();
+        return buffer;
+    }
+
+    //每条消息的长度，就是上面讲到Message的字节序列，包含length
+    public static int entrySize(Message message) {
+        return LogOverhead + message.getSizeInBytes();
+    }
+
+    public static int messageSetSize(Iterable&lt;Message&gt; messages) {
+        int size = 0;
+        for (Message message : messages) {
+            size += entrySize(message);
+        }
+        return size;
+    }
+
+    public static int messageSetSize(Message... messages) {
+        int size = 0;
+        for (Message message : messages) {
+            size += entrySize(message);
+        }
+        return size;
+    }
+
+    public abstract long getSizeInBytes();
+
+    public void validate() {
+        for (MessageAndOffset messageAndOffset : this)
+            if (!messageAndOffset.message.isValid()) {
+                throw new InvalidMessageException();
+            }
+    }
+    //将消息数据写入channel中
+    public abstract long writeTo(GatheringByteChannel channel, long offset, long maxSize) throws IOException;
+}
+</code></pre>
+
+<p>由上面的代码可以知道，MessageSet封装产生的ByteBuffer就是多个Message首尾相连构造而成。这里要注意一点：这些Message并不一定是单条消息数据，还可能是多条消息数据经过压缩后组成的一条Message，将该Message解压后得到的其实也是一个MessageSet。这一点大家在阅读ByteBufferMessageAndOffset遍历部分代码的时候会看到。<br>
+该类可以看作是message的工具类，负责消息数据的批量读和写。另外此类实现了Iterable<messageandoffset>，可以遍历MessageAndOffset对象，该对象封装了message数据和下一条message的offset信息。在<a href="http://rockybean.info/2012/07/24/jafka-consumer/">consumer</a>里，我们可以使用如下代码遍历获取的消息。</messageandoffset></p>
+
+<pre><code class="lang-java"><br>//获取消息数据集合
+ByteBufferMessageSet messageSet = consumer.fetch(fetch);
+//遍历消息数据集合
+for(MessageAndOffset messageAndOffset:messageSet){
+...
+}
+</code></pre>
+
+<p>MessageSet的两个子类从名字上可以看出它们封装消息的来源：一个来自ByteBuffer,一个来自File(即jafka文件)。下面分别介绍下这两个类。</p>
+
+<h3>ByteBufferMessageSet</h3>
+
+<p>该类主要被Producer和Consumer使用，前者将要传送的Message封装成ByteBufferMessageSet,然后传送到broker；后者将fetch到的Message封装成ByteBufferMessageSet，然后遍历消费。那么我们先来看下其提供的封装入口：</p>
+
+<pre><code class="lang-java"><br>    public ByteBufferMessageSet(ByteBuffer buffer) {
+        this(buffer,0L,ErrorMapping.NoError);
+    }
+    public ByteBufferMessageSet(ByteBuffer buffer,long initialOffset,ErrorMapping errorCode) {
+        this.buffer = buffer;
+        this.initialOffset = initialOffset;
+        this.errorCode = errorCode;
+        this.validBytes = shallowValidBytes();
+    }
+
+    public ByteBufferMessageSet(CompressionCodec compressionCodec,Message...messages) {
+        this(MessageSet.createByteBuffer(compressionCodec, messages),0L,ErrorMapping.NoError);
+    }
+    public ByteBufferMessageSet(Message...messages) {
+        this(CompressionCodec.NoCompressionCodec,messages);
+    }
+</code></pre>
+
+<p>由传入参数可知，前两个构造函数为consumer使用，后两个为producer使用。在讲解producer的使用时，有讲到一个配置参数serializer.class，它的作用是将ProducerData&lt;K,V&gt;中的K类对象转化为Message，也就是这里构造函数的传入参数Message。</p>
+
+<p>ByteBufferMessageSet的一个重要接口是遍历消息数据，即其iterator()方法，其实现这里不详细讲了，原理简单和大家说一下。前面提到过一个Message可能是多条消息数据缩后构成的，所以在遍历的时候便存在一个是否要遍历压缩的Message中每条消息数据的问题，其由isShallow参数决定：true不遍历，false遍历。ByteBufferMessageSet的iterator方法是调用的是<code>return internalIterator(false);</code>,是会遍历包括压缩Message中的所有消息数据的。实现方式是通过topIter遍历一级Message，当遇到压缩的Message时，将其解压缩并且用innerIter记录其遍历情况，当遍历结束后，回到topIter继续遍历。</p>
+
+<p>ByteBufferMessageSet的writeTo(Channel)的方法代码如下，将数据写入指定的channel。这里的channel是FileChannel，即该方法的调用时机是broker写数据文件，读者独到源码时可以看到。</p>
+
+<pre><code class="lang-java"><br>public long writeTo(GatheringByteChannel channel, long offset, long maxSize) throws IOException {
+        buffer.mark();
+        int written = channel.write(buffer);
+        buffer.reset();
+        return written;
+    }
+</code></pre>
+
+<h3>FileMessageSet</h3>
+
+<p>该类主要由broker使用，我们来看下它的构造函数：</p>
+
+<pre><code class="lang-java"><br>public FileMessageSet(FileChannel channel, long offset, long limit, //
+            boolean mutable, AtomicBoolean needRecover) throws IOException {
+        super();
+        this.channel = channel;
+        this.offset = offset;
+        this.mutable = mutable;
+        this.needRecover = needRecover;
+        if (mutable) {
+            if (limit &lt; Long.MAX_VALUE || offset &gt; 0) throw new IllegalArgumentException(
+                    "Attempt to open a mutable message set with a view or offset, which is not allowed.");
+
+            if (needRecover.get()) {
+                // set the file position to the end of the file for appending messages
+                long startMs = System.currentTimeMillis();
+                long truncated = recover();
+                logger.info("Recovery succeeded in " + (System.currentTimeMillis() - startMs) / 1000 + " seconds. " + truncated + " bytes truncated.");
+            } else {
+                setSize.set(channel.size());
+                setHighWaterMark.set(getSizeInBytes());
+                channel.position(channel.size());
+            }
+        } else {
+            setSize.set(Math.min(channel.size(), limit) - offset);
+            setHighWaterMark.set(getSizeInBytes());
+        }
+    }
+
+    public FileMessageSet(FileChannel channel, boolean mutable) throws IOException {
+        this(channel, 0, Long.MAX_VALUE, mutable, new AtomicBoolean(false));
+    }
+
+    public FileMessageSet(File file, boolean mutable) throws IOException {
+        this(Utils.openChannel(file, mutable), mutable);
+    }
+
+    public FileMessageSet(FileChannel channel, boolean mutable, AtomicBoolean needRecover) throws IOException {
+        this(channel, 0, Long.MAX_VALUE, mutable, needRecover);
+    }
+
+    public FileMessageSet(File file, boolean mutable, AtomicBoolean needRecover) throws IOException {
+        this(Utils.openChannel(file, mutable), mutable, needRecover);
+    }
+</code></pre>
+
+<p>由第一个构造函数可知，构造一个FileMessageSet需要以下几点：</p>
+
+<ul>
+<li>FileChannel,即打开一个文件，并且指明是否是mutable（可写）。</li>
+<li>offset,读入文件的起始位置</li>
+<li>limit，读入文件的大小</li>
+<li>mutable,是否可写</li>
+</ul>
+
+<p>fileChannel打开的文件即为jafka文件，其中存储着message，存储的格式与MessageSet是相同的，也是message首尾相连存储。FileMessageSet的遍历比较简单，顺序从channel中读取出来组装成MessageAndOffset即可，这里没有考虑Message是否压缩，原因应该是没有使用的需求。代码就不贴了，大家可以自己去阅读iterator方法。</p>
+
+<p>FileMessageSet的writeTo方法要特别强调一下，之前我们有提到jafka使用了sendfile这个高级系统调用，大大提升了传输效率，对应代码就在这里。</p>
+
+<pre><code class="lang-java">public long writeTo(GatheringByteChannel destChannel, long writeOffset, long maxSize) throws IOException {
+        return channel.transferTo(offset + writeOffset, Math.min(maxSize, getSizeInBytes()), destChannel);
+    }
+</code></pre>
+
+<p>FileMessageSet还有两个方法与消息数据的持久化有关。</p>
+
+<pre><code class="lang-java"><br>//将messages添加如当前的messageOffset
+ public long[] append(MessageSet messages) throws IOException {
+        checkMutable();
+        long written = 0L;
+        while (written &lt; messages.getSizeInBytes())
+            written += messages.writeTo(channel, 0, messages.getSizeInBytes());
+        long beforeOffset = setSize.getAndAdd(written);
+        return new long[] {  written,beforeOffset };
+    }
+
+//flush消息到磁盘
+    public void flush() throws IOException {
+        checkMutable();
+        long startTime = System.currentTimeMillis();
+        channel.force(true);
+        long elapsedTime = System.currentTimeMillis() - startTime;
+        LogFlushStats.recordFlushRequest(elapsedTime);
+        logger.debug("flush time " + elapsedTime);
+        setHighWaterMark.set(getSizeInBytes());
+        logger.debug("flush high water mark:" + highWaterMark());
+    }
+</code></pre>
+
+<p>第一个函数的作用便是将producer传递过来的messages添加到当前messageset对象(channel)中，虽然调用了writeTo方法，但是由于操作系统缓冲的存在，数据可能还没有真正写入磁盘，而flush方法的作用便是强制写磁盘。这两个方法便完成了消息数据持久化到磁盘的操作。<br>
+另外FileMessageSet还提供了read方法，可以读取指定offset到offset+limit的所有消息，这里就不贴代码了。</p>
+
+<h2>Request(com.sohu.jafka.network)</h2>
+
+<p>Request是producer consumer向broker发出请求的封装类，下图是其简单的类图：</p>
+
+<p><img src="./Jafka 源码阅读之通信协议及相关类解析 - Rockybean_files/980160662.png" alt="request_clz"></p>
+
+<p>用户只要实现Request接口，便可以添加自己的Request类，来实现自己的需求。我们来看下Request相关的源码为：</p>
+
+<pre><code class="lang-java"><br>public interface Request extends ICalculable {
+
+    //请求类型，enum
+    RequestKeys getRequestKey();
+    //将该request写入buffer，是序列化的过程，从这里可以看到request的协议格式
+    void writeTo(ByteBuffer buffer);
+}
+//request 的所有类型
+public enum RequestKeys {
+    PRODUCE, //0
+    FETCH, //1
+    MULTIFETCH, //2
+    MULTIPRODUCE, //3
+    OFFSETS,//4
+    CREATE,//5
+    DELETE;//6
+
+    public int value = ordinal();
+
+    final static int size = values().length;
+
+    public static RequestKeys valueOf(int ordinal) {
+        if (ordinal &lt; 0 || ordinal &gt;= size) return null;
+        return values()[ordinal];
+    }
+}
+</code></pre>
+
+<p>从上面可以看到RequestKeys的类型与类图中Request的子类是一一对应的，Request在传送时通过<code>writeTo(ByteBuffer)</code>将自身序列化，有自己的协议格式，这里以ProducerRequest举例，其发送时，ProducerRequest会被封装在一个BoundedByteBufferSend类中，该类会在字节序列中添加消息总长度和request类型这两个基本信息，最终producerRequest的协议格式如下：</p>
+
+<p>|字节数(Byte)|含义|<br>
+|:---------:|:----:|<br>
+|4|消息长度,length|<br>
+|2|Request类型，对应RequestKeys|<br>
+|2|topic length|<br>
+|x|topic|<br>
+|4|partition|<br>
+|4|messageset length|<br>
+|x|messageset|<br>
+{: class="table table-striped table-bordered"}</p>
+
+<p>当request传递到broker时，在上一篇文章中我们分析processor源码时，曾经提到过的<code>Send handle(SelectionKey key, Receive request)</code>方法，其中有以下代码：</p>
+
+<blockquote>
+  <p>final short requestTypeId = request.buffer().getShort();</p>
+</blockquote>
+
+<blockquote>
+  <p>final RequestKeys requestType = RequestKeys.valueOf(requestTypeId);</p>
+</blockquote>
+
+<p>其中request封装了客户端传递来的request字节序列，此处先读取2个字节，获取request的类型，然后选取对应的handler来处理，感兴趣的读者可以自行去查看相应的代码。</p>
+
+<p>其他Request的协议类型，大家可以自行去查看其writeTo方法，这里就不逐个列举了。</p>
+
+<h2>Send(com.sohu.jafka.network)</h2>
+
+<p>Send类用于封装发送数据，调用自身的write方法，将数据发送到目的地。其类图如下：</p>
+
+<p><img src="./Jafka 源码阅读之通信协议及相关类解析 - Rockybean_files/3612607260.png" alt="send_clz_diagram"></p>
+
+<p>我们先来看下Send的源码：</p>
+
+<pre><code class="lang-java">public interface Send extends Transmission {
+
+//将数据写入channel，返回写入的数据大小。
+    int writeTo(java.nio.channels.GatheringByteChannel channel) throws IOException;
+
+//数据过大时，要分多次写才能完整发送数据，这便是此方法的作用。
+    int writeCompletely(java.nio.channels.GatheringByteChannel channel) throws IOException;
+}
+
+public abstract class AbstractSend extends AbstractTransmission implements Send {
+    public int writeCompletely(GatheringByteChannel channel) throws IOException {
+        int written = 0;
+        while(!complete()) {
+            written += writeTo(channel);
+        }
+        return written;
+    }
+
+}
+</code></pre>
+
+<p><code>AbstractSend</code>实现了writeCompletely方法，实现也很简单，循环检测是否<code>complete()</code>，直到全部写完再返回，这也是实际使用中调用的方法，<code>setCompleted()</code>实际在writeTo方法中被调用。</p>
+
+<p>从Send子类的类名中我们可以看出其send的类，比如<code>MessageSetSend</code>是封装并发送MessageSet的，ByteBufferSend是发送ByteBuffer的，BoundedByteBufferSend类会在传入ByteBuffer对象前面添加4个字节的length，它也可以封装Request对象，前面讲解ProducerRequest格式的时候有提到这一点，此时它还会添加2个字节的request类型数据。send的使用是很简单的，producer发送数据时会用到如下的代码：</p>
+
+<pre><code class="lang-java"><br>BoundedByteBufferSend send = new BoundedByteBufferSend(request);
+...
+    getOrMakeConnection();
+    int written = -1;
+    try {
+        written = send.writeCompletely(channel);
+    } catch (IOException e) {
+        // no way to tell if write succeeded. Disconnect and re-throw exception to let client handle retry
+        disconnect();
+        throw new RuntimeException(e);
+    } finally {
+        if (logger.isDebugEnabled()) {
+            logger.debug(format("write %d bytes data to %s:%d", written, host, port));
+        }
+    }
+</code></pre>
+
+<p>上述代码可以看到，使用简单，先构造一个Send对象，然后调用其writeCompletely方法即可将数据写入到对应的channel了。Send每个子类这里就不详细介绍了，留给大家自己去研究。</p>
+
+<h2>Receive(com.sohu.jafka.network)</h2>
+
+<p>Receive类负责从socket中接收数据，其类图如下：</p>
+
+<p><img src="./Jafka 源码阅读之通信协议及相关类解析 - Rockybean_files/37689298.png" alt="receive_clz"></p>
+
+<p>我们来看看Receive的源码。</p>
+
+<pre><code class="lang-java"><br>public interface Receive extends Transmission {
+//返回读取到的数据，不包括表示length的4个Byte
+    ByteBuffer buffer();
+//由channel读取数据
+    int readFrom(ReadableByteChannel channel) throws IOException;
+//数据过多时，要多次read才可以，此方法保证一次性读取所有数据
+    int readCompletely(ReadableByteChannel channel) throws IOException;
+}
+</code></pre>
+
+<p>具体方法的含义，大家可以看代码中的注释，其方法与Send接口正好是相对应的，一个读，一个写。BoundedByteBufferReceive是实际中使用的类，其实现也很简单，一个4字节的sizeBuffer读取消息长度，一个contentBuffer用于读取实际的数据，代码这里就不贴了。</p>
+
+<h2>小结</h2>
+
+<p>本文主要讲解了Jafka运行中producer consumer与broker之间通信所遵循的协议及其相关的类，希望对大家理解有所帮助。</p>
+        </div>
+        <p itemprop="keywords" class="tags">标签: <a href="http://rockybean.info/tag/jafka/">jafka</a></p>
+    </article>
+
+    <div id="comments">
+        	<h3>仅有一条评论</h3>
+    
+    <ol class="comment-list"><li itemscope="" itemtype="http://schema.org/UserComments" id="comment-780" class="comment-body comment-parent comment-odd">
+    <div class="comment-author" itemprop="creator" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="image"><img class="avatar" src="./Jafka 源码阅读之通信协议及相关类解析 - Rockybean_files/61e489ce669e3311b60eccf326172ae6" alt="宋鑫" width="32" height="32"></span>
+        <cite class="fn" itemprop="name">宋鑫</cite>
+    </div>
+    <div class="comment-meta">
+        <a href="http://rockybean.info/2012/08/03/jafka-message#comment-780"><time itemprop="commentTime" datetime="2015-07-04T16:25:31+08:00">July 4th, 2015 at 04:25 pm</time></a>
+            </div>
+    <div class="comment-content" itemprop="commentText">
+    <p>好文要顶</p>    </div>
+    <div class="comment-reply">
+        <a href="http://rockybean.info/2012/08/03/jafka-message?replyTo=780#respond-post-70" rel="nofollow" onclick="return TypechoComment.reply(&#39;comment-780&#39;, 780);">回复</a>    </div>
+    </li>
+</ol>
+        
+    
+        <div id="respond-post-70" class="respond">
+        <div class="cancel-comment-reply">
+        <a id="cancel-comment-reply-link" href="http://rockybean.info/2012/08/03/jafka-message#respond-post-70" rel="nofollow" style="display:none" onclick="return TypechoComment.cancelReply();">取消回复</a>        </div>
+    
+    	<h3 id="response">添加新评论</h3>
+    	<form method="post" action="http://rockybean.info/2012/08/03/jafka-message/comment" id="comment-form" role="form">
+                		<p>
+                <label for="author" class="required">称呼</label>
+    			<input type="text" name="author" id="author" class="text" value="" required="">
+    		</p>
+    		<p>
+                <label for="mail" class="required">Email</label>
+    			<input type="email" name="mail" id="mail" class="text" value="" required="">
+    		</p>
+    		<p>
+                <label for="url">网站</label>
+    			<input type="url" name="url" id="url" class="text" placeholder="http://" value="">
+    		</p>
+                		<p>
+                <label for="textarea" class="required">内容</label>
+                <textarea rows="8" cols="50" name="text" id="textarea" class="textarea" required=""></textarea>
+            </p>
+    		<p>
+                <button type="submit" class="submit">提交评论</button>
+            </p>
+    	</form>
+    </div>
+    </div>
+
+    <ul class="post-near">
+        <li>上一篇: <a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver" title="Jafka Broker源码阅读之SocketServer解析">Jafka Broker源码阅读之SocketServer解析</a></li>
+        <li>下一篇: <a href="http://rockybean.info/2012/08/07/snowflake_theory" title="snowflake核心源码解读">snowflake核心源码解读</a></li>
+    </ul>
+</div><!-- end #main-->
+
+<div class="col-mb-12 col-offset-1 col-3 kit-hidden-tb" id="secondary" role="complementary">
+        <section class="widget">
+		<h3 class="widget-title">最新文章</h3>
+        <ul class="widget-list">
+            <li><a href="http://rockybean.info/2016/12/05/180">crontab不能运行的问题</a></li><li><a href="http://rockybean.info/2016/05/24/under_gethostname">gethostname的背后机制</a></li><li><a href="http://rockybean.info/2015/04/13/ssh-login-debug-method-and-problems">ssh登录的调试方法和常见问题</a></li><li><a href="http://rockybean.info/2015/02/27/elasticsearch-date-type">Elasticsearch Date类型使用技巧</a></li><li><a href="http://rockybean.info/2015/02/25/kibana4-nginx-reverse-proxy">Kibana4使用nginx作反向代理</a></li><li><a href="http://rockybean.info/2015/02/09/elasticsearch-immense-term-exception">ElasticSearch immense term错误</a></li><li><a href="http://rockybean.info/2015/02/01/idea-integrate-xdebug">IDEA集成xdebug远程调试功能</a></li><li><a href="http://rockybean.info/2015/01/19/tar_chown_extraced_file">一次由tar解压引起的ssh登录失败事故</a></li><li><a href="http://rockybean.info/2015/01/02/pdu">名词解释之PDU</a></li><li><a href="http://rockybean.info/2014/11/29/tcp_self_connection">tcp自连接问题</a></li>        </ul>
+    </section>
+    
+        <section class="widget">
+		<h3 class="widget-title">最近回复</h3>
+        <ul class="widget-list">
+                            <li><a href="http://rockybean.info/2012/08/01/jafka-src#comment-789">xjk</a>: 顶一个</li>
+                    <li><a href="http://rockybean.info/about.html#comment-788">adfa</a>: jafka是啥，只听说过kafka</li>
+                    <li><a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver#comment-787">chinesejie</a>: 这段socketServer 代码 跟cobar 中间件的代码 ...</li>
+                    <li><a href="http://rockybean.info/2012/07/24/jafka-consumer#comment-786">chinesejie</a>: sorry 这段没错。</li>
+                    <li><a href="http://rockybean.info/2012/07/24/jafka-consumer#comment-785">chinesejie</a>: 比如1024其实的消息数据为90B，其后的消息数据为30B，这两...</li>
+                    <li><a href="http://rockybean.info/2012/07/24/jafka-consumer#comment-784">chinesejie</a>: 如果是一个broker集群，那么可能在一个broker上是tes...</li>
+                    <li><a href="http://rockybean.info/about.html#comment-783">yy</a>: 非常感谢jafka相关内容的分享！</li>
+                    <li><a href="http://rockybean.info/2015/02/27/elasticsearch-date-type#comment-781">kenshin23333</a>: 好用！感谢楼主！</li>
+                    <li><a href="http://rockybean.info/2012/08/03/jafka-message#comment-780">宋鑫</a>: 好文要顶</li>
+                    <li><a href="http://rockybean.info/2012/08/02/jafka-broker-socketserver#comment-779">宋鑫</a>: 可以考虑同步转载到CSDN，要不好像没什么人看</li>
+                </ul>
+    </section>
+    
+        <section class="widget">
+		<h3 class="widget-title">分类</h3>
+        <ul class="widget-list"><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/default/">默认分类</a></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/tech/">技术</a><ul class="widget-list"><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/network/">网络</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/algorithm/">算法</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/devops/">运维</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/language/">语言</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/source_code/">源码解析</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/database/">数据库</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/bug/">BUG</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/tools/">七种武器</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/front_end/">前端技术</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/optimize/">优化</a></li></ul></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/book/">读书</a><ul class="widget-list"><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/tech_book/">技术这档子事</a></li><li class="category-level-1 category-child category-level-odd"><a href="http://rockybean.info/category/art_book/">文艺那档子事</a></li></ul></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/mac/">mac大法</a></li><li class="category-level-0 category-parent"><a href="http://rockybean.info/category/talk/">随便扯扯</a></li></ul>	</section>
+    
+        <section class="widget">
+		<h3 class="widget-title">归档</h3>
+        <ul class="widget-list">
+            <li><a href="http://rockybean.info/2016/12/">December 2016</a></li><li><a href="http://rockybean.info/2016/05/">May 2016</a></li><li><a href="http://rockybean.info/2015/04/">April 2015</a></li><li><a href="http://rockybean.info/2015/02/">February 2015</a></li><li><a href="http://rockybean.info/2015/01/">January 2015</a></li><li><a href="http://rockybean.info/2014/11/">November 2014</a></li><li><a href="http://rockybean.info/2014/10/">October 2014</a></li><li><a href="http://rockybean.info/2014/08/">August 2014</a></li><li><a href="http://rockybean.info/2014/07/">July 2014</a></li><li><a href="http://rockybean.info/2014/04/">April 2014</a></li><li><a href="http://rockybean.info/2013/11/">November 2013</a></li><li><a href="http://rockybean.info/2012/08/">August 2012</a></li><li><a href="http://rockybean.info/2012/07/">July 2012</a></li>        </ul>
+	</section>
+    
+    	<section class="widget">
+		<h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+                            <li class="last"><a href="http://rockybean.info/admin/login.php">登录</a></li>
+                        <li><a href="http://rockybean.info/feed/">文章 RSS</a></li>
+            <li><a href="http://rockybean.info/feed/comments/">评论 RSS</a></li>
+            <li><a href="http://www.typecho.org/">Typecho</a></li>
+        </ul>
+	</section>
+    <section class="widget">
+	<ul class="widet-list" style="margin-left:99999px;">
+<li><a href="http://www.cdliqing.com/">创大沥青</a></li>
+</ul>
+</section>
+
+</div><!-- end #sidebar -->
+
+        </div><!-- end .row -->
+    </div>
+</div><!-- end #body -->
+
+<footer id="footer" role="contentinfo">
+    © 2017 <a href="http://rockybean.info/">Rockybean</a>.
+    由 <a href="http://www.typecho.org/">Typecho</a> 强力驱动.
+</footer><!-- end #footer -->
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F910e4fd2443eac0ca71a16d63ba69db5' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="./Jafka 源码阅读之通信协议及相关类解析 - Rockybean_files/h.js.下载" type="text/javascript"></script><a href="http://tongji.baidu.com/hm-web/welcome/ico?s=910e4fd2443eac0ca71a16d63ba69db5" target="_blank"><img border="0" src="./Jafka 源码阅读之通信协议及相关类解析 - Rockybean_files/21.gif" width="20" height="20"></a>
+
+
+
+
+</body></html>
