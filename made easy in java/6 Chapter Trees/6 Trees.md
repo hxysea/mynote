@@ -36,4 +36,9 @@
 		- traverse the left subtree in postorder
 		- traverse the right subtree in postorder
 		- visit the root
+	- Level Order Traversal
+		- visit the root
+		- while traversing level l, keep all the elments at level + 1 in queue
+		- go to the next level and visit all the nodes at the level
+		- repeat this until all levels are completed
  
