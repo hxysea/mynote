@@ -29,6 +29,27 @@
 			- Liferay
 			- uPortal
 	- Supported Protocols
+		- CAS(version1,2,3)
+			- Cas Server
+				- 3.0+版本增加/p3/serviceValidate接口返回用户属性
+				- 设置http头Location字段实现浏览器自动跳转
+				- 在对接非web应用时要使用代理模式
+					- 用户---->代理---->非web应用----->Cas Server
+					- 非Web应用----->代理----->用户
+				- 主要流程
+					- 请求目标页面
+					- 身份认证
+					- 颁发票据
+					- 校验票据，设置成功字段标志
+					- 重定向到目标页面（携带成功标志）
+					- 响应目标页面
+			- Cas Client
+			- TGT(Ticket Granting Ticket)
+			- ST(Service Ticket)
+		- SAML 1.1 and 2（Security Assertion Markup Language）
+		- OpenID Connect
+		- OpenID
+		- OAuth 2.0
 1. Ticketing
 	- TicketRegistry 存储ticket
 		- Default(In-Memory)Ticket Registry
