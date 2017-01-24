@@ -50,19 +50,22 @@
 		- OpenID Connect
 		- OpenID
 		- OAuth 2.0
-1. Ticketing
-	- TicketRegistry 存储ticket
-		- Default(In-Memory)Ticket Registry
-			- map
-		- Cache-Based Ticket Registries
-			- Hazelcast
-			- Ehcache
-			- Ignite
-			- Memcached
-			- Infinispan
-		- RDBMS Ticket Registries
-			- JPA
-		- NoSQL Ticket Registries
-		- Secure Cache Replication
-	- ExpirationPolicy 提供ticket过期策略
-		- 
+	- Software Components
+		- Web(Spring MVC/Spring Webflow)
+		- Ticketing
+			- TicketRegistry 存储ticket
+			- Default(In-Memory)Ticket Registry
+				- map
+			- Cache-Based Ticket Registries
+				- Hazelcast
+				- Ehcache
+				- Ignite
+				- Memcached
+				- Infinispan
+			- RDBMS Ticket Registries
+				- JPA
+			- NoSQL Ticket Registries
+			- Secure Cache Replication
+			- ExpirationPolicy 提供ticket过期策略
+		- Authentication
+	
