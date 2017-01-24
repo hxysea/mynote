@@ -1,0 +1,71 @@
+----------
+1/21/2017 3:06:23 PM 
+
+----------
+## 系统架构 ##
+1. 系统组件
+	- CAS Server
+		- 基于spring框架的java程序
+		- 主要功能是对用户进行身份认证和对cas client授权访问
+		- 通过发布和校验ticket完成功能
+			- 用户身份认证通过，在cas server路径下写入身份认证成功的票据cookie
+				- e.g., **Set-Cookie:** CASTGC=TGT-1312-ncCKemb0UF9uDnuLn6WxGPIuA56pgceKAzIBMMoRJiulhVIVza-cas; Path=/
+			- 根据TGT生成ST,使用设置HTTP头Location字段的方式响应给浏览器，实现请求跳转
+				- **Location:** http://10.18.147.181/home/index.action?ticket=ST-22619-LSXgfE3n9MgVzpXvbymG-cas
+			- cas client将ST传递给cas server校验ST，校验通过授权访问cas client
+	- CAS Clients
+		- **Platforms**:集成使用cas client包（通过CAS，SAML，OAuth等协议）对接cas server
+			- Apache httpd Server(mod **auth cas module**)
+			- Java(**Java CAS Client**)
+			- .NET(**.NET CAS Client**)
+			- PHP(**phpCAS**)
+			- Python(**paycas**)
+			- Ruby(**rubycas-client**)
+		- **Applications**：直接对接cas server
+			- Outlook Web Application(ClearPass++, .NET Client)
+			- Atlassian Confluence
+			- Atlassian JIRA
+			- Drupal
+			- Liferay
+			- uPortal
+	- Supported Protocols
+		- CAS(version1,2,3)
+			- Cas Server
+				- 3.0+版本增加/p3/serviceValidate接口返回用户属性
+				- 设置http头Location字段实现浏览器自动跳转
+				- 在对接非web应用时要使用代理模式
+					- 用户---->代理---->非web应用----->Cas Server
+					- 非Web应用----->代理----->用户
+				- 主要流程
+					- 请求目标页面
+					- 身份认证
+					- 颁发票据
+					- 校验票据，设置成功字段标志
+					- 重定向到目标页面（携带成功标志）
+					- 响应目标页面
+			- Cas Client
+			- TGT(Ticket Granting Ticket)
+			- ST(Service Ticket)
+		- SAML 1.1 and 2（Security Assertion Markup Language）
+		- OpenID Connect
+		- OpenID
+		- OAuth 2.0
+	- Software Components
+		- Web(Spring MVC/Spring Webflow)
+		- Ticketing
+			- TicketRegistry 存储ticket
+			- Default(In-Memory)Ticket Registry
+				- map
+			- Cache-Based Ticket Registries
+				- Hazelcast
+				- Ehcache
+				- Ignite
+				- Memcached
+				- Infinispan
+			- RDBMS Ticket Registries
+				- JPA
+			- NoSQL Ticket Registries
+			- Secure Cache Replication
+			- ExpirationPolicy 提供ticket过期策略
+		- Authentication
+	
