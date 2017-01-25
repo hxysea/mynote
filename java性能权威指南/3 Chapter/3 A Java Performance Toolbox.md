@@ -19,4 +19,26 @@
 				- 没5s刷新一次数据
 	- Java Monitorint Tools
 		- jcmd
-		- jconsole
+			- e.g., jcmd process_id VM.uptime
+		- jinfo
+			- e.g., jinfo -flags procee_id
+		- Thread Information
+			- jconsole
+			- jvisualvm
+			- jstack process_id
+		- Class Information
+			- jconsole
+			- jstat
+		- Live GC Analysis
+			- jconsole
+			- jcmd
+			- jmap
+			- jstat
+		- Heap Dump Postprocessing
+			- jvisualvm
+			- jcmd
+			- jmap
+			- jhat
+			- Eclipse Memory Analyzer Tool
+		- Profiling Tools
+			- 
