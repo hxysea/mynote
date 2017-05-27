@@ -82,4 +82,9 @@ ORDER BY
 
 	having avg(score) >= 80
 	```
+
+## PS ##
+usr/bin/mysql 是指：mysql的运行路径 
+var/lib/mysql 是指：mysql数据库文件的存放路径 
+usr/lib/mysql 是指：mysql的安装路径
  
