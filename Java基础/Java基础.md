@@ -562,3 +562,10 @@ Returns a view of the portion of this list between the specified fromIndex, incl
 			
 			
 			```
+## Java性能监控 ##
+1. 查看整个JVM内存状态
+	- jmap -heap [pid]
+2. 查看JVM堆中对象详细占用情况
+	- jmap -histo [pid]
+3. 导出整个JVM中的内存信息
+	- jmap -dump:format=b,file=文件名.dump [pid]  
