@@ -1,0 +1,18 @@
+Idea快捷键：
+
+1. Ctrl + F12 查看方法（相当于Ctrl + O）
+2. Alt + 7 查看当前文件结构
+3. Ctrl + Shift + U 大小写切换
+
+
+
+
+
+
+
+TODO：
+1. iperf文档说明
+2. mysql procedure analyse();分析表结构
+	select * from 2673_torecord procedure analyse(1);
+
+3.SELECT INET_ATON('192.168.1.38'); ip地址使用inet_aton方法转换为整型存储
