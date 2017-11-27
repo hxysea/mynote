@@ -1,0 +1,14 @@
+spring:
+    kafka:
+        bootstrap-servers: 127.0.0.1:9092
+        consumer:
+            group-id: myGroup
+            enableAutoCommit: true
+            autoOffsetReset: latest
+        producer:
+            batch-size: 1000
+        listener:
+            concurrency: 3
+        properties:
+            zk.connect: 127.0.0.1:2181
+            zk.connectiontimeout.ms: 1000000

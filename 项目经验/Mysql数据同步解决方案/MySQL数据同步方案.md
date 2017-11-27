@@ -75,13 +75,21 @@ show binlog events;
 ```
 ![](https://i.imgur.com/e8T93sy.png)
 
-- 获取canalserver（[https://github.com/alibaba/canal/releases/download/canal-1.0.24/canal.deployer-1.0.24.tar.gz](https://github.com/alibaba/canal/releases/download/canal-1.0.24/canal.deployer-1.0.24.tar.gz)） 
-- 修改canal server配置
+- **获取canalserver**（[https://github.com/alibaba/canal/releases/download/canal-1.0.24/canal.deployer-1.0.24.tar.gz](https://github.com/alibaba/canal/releases/download/canal-1.0.24/canal.deployer-1.0.24.tar.gz)） 
+- **修改canal server配置**
 	- 进入D:\MySQL_Sync_Component\canal.deployer-1.0.24\conf\example目录
+	- 修改**canal.properties**文件
 	- 修改**instance.properties**文件
 
+
+```properties
+#canal.properties
+##配置zookeeper地址
+canal.zkServers=127.0.0.1:2181
+```
 ```properties
 #################################################
+#instance.properties
 ## mysql serverId
 canal.instance.mysql.slaveId = 1234
 
@@ -137,6 +145,56 @@ example.log
 2017-11-24 17:55:33.896 [destination = example , address = /127.0.0.1:3306 , EventParser] WARN  c.a.otter.canal.parse.inbound.mysql.MysqlEventParser - prepare to find start position just show master status
 
 ``` 
+### Zookeeper Server搭建 ###
+- **获取并配置zookeeper**（[http://www.apache.org/dyn/closer.cgi/zookeeper/](http://www.apache.org/dyn/closer.cgi/zookeeper/)）
+- 复制D:\MySQL_Sync_Component\zookeeper\zookeeper-3.4.11\conf\zoo_sample.cfg并重命名为**zoo.cfg**,zookeeper读取的是zoo.cfg这个配置文件
+-  **启动zookeeper**，进入D:\MySQL_Sync_Component\zookeeper\zookeeper-3.4.11\bin，执行
+```
+zkServer.cmd
+```
+
+### Kafka Server搭建 ###
+- **获取Kafaka Server**（[https://www.apache.org/dyn/closer.cgi?path=/kafka/1.0.0/kafka_2.11-1.0.0.tgz](https://www.apache.org/dyn/closer.cgi?path=/kafka/1.0.0/kafka_2.11-1.0.0.tgz)）
+- **配置Kafka Server**
+	- 修改D:\MySQL_Sync_Component\kafka\kafka_2.12-1.0.0\config\server.properties
+
+```properties
+#server.properteis#
+#配置zookeeper连接地址
+zookeeper.connect=localhost:2181
+```
+- **启动Kafka服务**，进入D:\MySQL_Sync_Component\kafka\kafka_2.12-1.0.0\bin\windows，执行
+```
+kafka-server-start.bat D:\MySQL_Sync_Component\kafka\kafka_2.12-1.0.0\bin\conf\server.properties
+```
+- **创建topic**，进入D:\MySQL_Sync_Component\kafka\kafka_2.12-1.0.0\bin\windows，执行
+```
+kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic testbinlog
+```
+- 启动一个kafka生产者，用于测试kafka是否启动成功。执行
+```
+kafka-console-producer.bat --broker-list localhost:9092 --topic testbinlog
+```
+- 启动一个kafka消费者，接收生产者发送的消息。测试通过，consumer可以收到producer发送的消息。执行
+```
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic testbinlog --from-beginning
+```
+### 创建Spring Boot应用 ###
+- 新建一个Spring Boot应用（[http://projects.spring.io/spring-boot/#quick-start](http://projects.spring.io/spring-boot/#quick-start)）
+- **pom**文件增加kafka依赖
+```xml
+<dependency>
+	<groupId>org.springframework.kafka</groupId>
+	<artifactId>spring-kafka</artifactId>
+</dependency>
+```
+- 编写kafka生产者和消费者代码，代码在（）
+- 启动应用
+
+### 总结 ###
+如上，已经介绍了整个解决方案所需组件的配置及启动方法。文中的解决方案用于业务数据通知或者缓存刷新等场景。本文除了提供一种业务场景的解决方案以外，更多的是希望读者可以从中领会到各组件的设计思想及其优劣势。除了可以熟练配置及使用各组件，这些组件的编码思想及设计模式更是我辈学习的典范。对于各组件的使用，最好先去阅读官方文档，然后参考相关博客，再编码实践，最后阅读下源码，达到融会贯通的境界。
+**PS:**
+![](https://i.imgur.com/Ay1afXK.png)
 
 
 ## 参考文档 ##
@@ -144,4 +202,6 @@ example.log
 [https://github.com/alibaba/canal/wiki](https://github.com/alibaba/canal/wiki)
 
 [http://kafka.apache.org/](http://kafka.apache.org/)
+
+[https://docs.spring.io/spring-boot/docs/1.5.8.RELEASE/reference/htmlsingle/](https://docs.spring.io/spring-boot/docs/1.5.8.RELEASE/reference/htmlsingle/)
 
