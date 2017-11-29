@@ -12,3 +12,9 @@ spring:
         properties:
             zk.connect: 127.0.0.1:2181
             zk.connectiontimeout.ms: 1000000
+canal:
+    config:
+        ip: 127.0.0.1
+        port: 11111
+        destination: example
+        topics: .*\..*torecord

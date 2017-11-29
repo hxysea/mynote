@@ -20,7 +20,7 @@
 
 ## 架构图 ##
 
-![](https://i.imgur.com/3wALRVW.png)
+![组件交互架构图](https://i.imgur.com/3wALRVW.png)
 
 ## 实现 ##
 
@@ -165,7 +165,7 @@ zookeeper.connect=localhost:2181
 ```
 - **启动Kafka服务**，进入D:\MySQL_Sync_Component\kafka\kafka_2.12-1.0.0\bin\windows，执行
 ```
-kafka-server-start.bat D:\MySQL_Sync_Component\kafka\kafka_2.12-1.0.0\bin\conf\server.properties
+kafka-server-start.bat D:\MySQL_Sync_Component\kafka\kafka_2.12-1.0.0\config\server.properties
 ```
 - **创建topic**，进入D:\MySQL_Sync_Component\kafka\kafka_2.12-1.0.0\bin\windows，执行
 ```
@@ -188,13 +188,13 @@ kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic testbinlog 
 	<artifactId>spring-kafka</artifactId>
 </dependency>
 ```
-- 编写kafka生产者和消费者代码，代码在（）
+- 编写kafka生产者和消费者代码，代码在（[https://github.com/hxysea/mynote/tree/master/%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C/Mysql%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/DataSyncApplication](https://github.com/hxysea/mynote/tree/master/%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C/Mysql%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/DataSyncApplication)）
 - 启动应用
 
 ### 总结 ###
 如上，已经介绍了整个解决方案所需组件的配置及启动方法。文中的解决方案用于业务数据通知或者缓存刷新等场景。本文除了提供一种业务场景的解决方案以外，更多的是希望读者可以从中领会到各组件的设计思想及其优劣势。除了可以熟练配置及使用各组件，这些组件的编码思想及设计模式更是我辈学习的典范。对于各组件的使用，最好先去阅读官方文档，然后参考相关博客，再编码实践，最后阅读下源码，达到融会贯通的境界。
 **PS:**
-![](https://i.imgur.com/Ay1afXK.png)
+![项目结构图](https://i.imgur.com/Ay1afXK.png)
 
 
 ## 参考文档 ##
