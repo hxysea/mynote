@@ -1,0 +1,60 @@
+#### 反射
+
+- java.lang.reflect
+  - Memeber
+    - 一个接口可以反映单个成员（成员变量或成员方法）或构造函数的识别信息，
+  - AccessibleObject
+    - Field、Method、Constructor对象的基础类
+    - 可以将反射获取的对象访问控制标记取消（setAccessible(boolean flag)）
+  - Array
+    - 提供动态生成和访问数组的方法
+  - Constructor
+    - 提供类的构造函数信息以及访问类的构造函数的接口
+  - Field
+    - 提供一个类的成员变量的信息以及访问类的变量的接口
+  - Method
+    - 提供一个类的方法的信息以及访问类的方法的接口
+  - Modifier
+    - 提供了static方法和常量，对类和成员访问修饰符进行解码
+  - Proxy
+    - 提供动态生成代理类和类实例的静态方法
+- Java在运行时加载某名称的class，并获得其完整结构，构造该类的对象
+  - 获取类的Class对象
+  - 获取类的Fields
+    - getFields返回的是声明为public的属性，包括父类中的定义
+    - getDeclaredFields返回的是该类定义的属性，不包括父类中的定义
+  - 获取类的Method
+    - getMethod返回一个Method对象，表示Class对象所表示的类或接口的指定公共成员方法
+  - 获取类的Constructor
+  - 新建类的实例
+    - classType.newInstance
+    - constructor.newInstance
+    - constructor(...).newInstance
+  - 调用类的函数
+    - Method 
+      - invoke(instance,args)方法
+- 动态代理
+  - 为其他对象提供一种代理以控制对这个对象的访问
+    - Proxy.newProxyInstance(ClassLoader loader,   Class<?>[] interfaces,  InvocationHandler h) 
+  - 接口
+    - 声明真实对象和代理对象的共同接口
+  - InvocationHandler实现类
+    - 内部包含对真实对象的引用，从而可以操作真实对象
+    - 必须实现InvocationHandler接口
+  - 真实类
+    - 真实对象，是最终要引用的对象
+  - 优点
+    - 不用手动实现每个方法代理
+  - 步骤
+    - Proxy.getProxyClass获取代理类Class对象
+    - 通过反射获取含参（InvocationHandler）Constructor对象
+    - 通过Constructor获取动态代理实例
+- 静态代理
+  - 接口
+    - 定义真实对象和代理对象的共同接口
+  - 真实类
+    - 真正执行业务逻辑的对象
+  - 静态代理类
+    - 必须实现同真实对象的共同接口
+    - 包含真实对象的引用
+    - 可增加代理逻辑，如权限控制、日志打印等

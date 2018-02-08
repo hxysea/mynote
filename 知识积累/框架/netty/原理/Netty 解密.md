@@ -95,13 +95,19 @@ Netty的核心组件包括以下4个部分：
 ## 解密5 Netty源码赏析
 
 - **Channel**
-- **ChannelFuture**
+  - 封装socket操作
 
+- **ChannelFuture**
 - **EventLoopGroup**
 - **ChannelHandler**
 - **BootStrap**用于客户端启动一个Channel的工厂类
   - **bind()** 用于UDP连接
   - **connect()** 用于TCP连接
-- ​
+- **特性**
+  - **Zero Copy**
+  - **Epoll(Linux)**
+    - 可扩展的I/O事件通知机制
+
+
 
 ## 解密6 综合实战——开发基于Netty的Http Server
