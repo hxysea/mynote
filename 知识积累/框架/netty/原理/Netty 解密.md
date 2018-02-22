@@ -96,13 +96,29 @@ Netty的核心组件包括以下4个部分：
 
 - **Channel**
   - 封装socket操作
-
 - **ChannelFuture**
-- **EventLoopGroup**
+- **MultithreadEventLoopGroup**
+  - **NioEventLoopGroup**
+
+
+- **EventLoop**
+  - **SingleThreadEvetnLoop**
+    - **NioEventLoop**
+
+
+
+
 - **ChannelHandler**
-- **BootStrap**用于客户端启动一个Channel的工厂类
-  - **bind()** 用于UDP连接
-  - **connect()** 用于TCP连接
+- **AbstactBootstrap**
+  - **ServerBootstrap**
+    - **bind()** 用于UDP连接
+    - **ServerBootstrapAcceptor**
+
+
+  - **Bootstrap**用于客户端启动一个Channel的工厂类
+    - **connect()** 用于TCP连接
+
+
 - **特性**
   - **Zero Copy**
   - **Epoll(Linux)**
