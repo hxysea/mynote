@@ -125,5 +125,11 @@ Netty的核心组件包括以下4个部分：
     - 可扩展的I/O事件通知机制
 
 
+## 解密6 Netty Server服务启动过程分析
 
-## 解密6 综合实战——开发基于Netty的Http Server
+- 先用一张图概览一下Netty Server启动的大概过程
+
+
+
+
+## 解密7 综合实战——开发基于Netty的Http Server
